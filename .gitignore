@@ -1,8 +1,9 @@
-*.iml
-.gradle
-/local.properties
-/.idea/*
-.DS_Store
-/build
-/captures
-.externalNativeBuild
+/Section2-DevelopAndroidApp/sandwich-club-starter-code/*.iml
+/Section2-DevelopAndroidApp/sandwich-club-starter-code/.gradle
+/Section2-DevelopAndroidApp/sandwich-club-starter-code/local.properties
+/Section2-DevelopAndroidApp/sandwich-club-starter-code/.idea/*
+/Section2-DevelopAndroidApp/sandwich-club-starter-code/.DS_Store
+/Section2-DevelopAndroidApp/sandwich-club-starter-code/build
+/Section2-DevelopAndroidApp/sandwich-club-starter-code/app/build
+/Section2-DevelopAndroidApp/sandwich-club-starter-code//captures
+/Section2-DevelopAndroidApp/sandwich-club-starter-code/.externalNativeBuild

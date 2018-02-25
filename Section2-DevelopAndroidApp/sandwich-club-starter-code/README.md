@@ -21,10 +21,13 @@ are display in a sensible way;
 
 ## Application screenshots
 List of Sandwich
-<img src="../sandwich-club-screenshots/img1.png" height="50%" width="50%"/>
+
+<img src="../sandwich-club-screenshots/img1.png" height="40%" width="40%"/>
 
 Sandwich detail (pt1)
-<img src="../sandwich-club-screenshots/img2.png" height="50%" width="50%"/>
+
+<img src="../sandwich-club-screenshots/img2.png" height="40%" width="40%"/>
 
 Sandwich detail (pt2)
-<img src="../sandwich-club-screenshots/img3.png" height="50%" width="50%"/>
+
+<img src="../sandwich-club-screenshots/img3.png" height="40%" width="40%"/>
