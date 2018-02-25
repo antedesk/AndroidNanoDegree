@@ -16,5 +16,15 @@ Through this project, I:
 - Practiced JSON parsing to a model object by using JSONObject and JSONArray;
 - Designed the detail activity layout;
 - Populated all fields in the detail activity and layout so the different elements
-are display in a sensible way.
-- Managed possibile exceptions and empty strings
+are display in a sensible way;
+- Managed possibile exceptions and empty strings.
+
+## Application screenshots
+![List of Sandwich](../sandwich-club-screenshots/img1.png)
+Format: ![List of Sandwich](url)
+
+![Sandwich detail (pt1)](../sandwich-club-screenshots/img2.png)
+Format: ![Sandwich detail (pt1)](url)
+
+![Sandwich detail (pt2)](../sandwich-club-screenshots/img3.png)
+Format: ![Sandwich detail (pt2)](url)
