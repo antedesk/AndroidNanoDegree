@@ -20,11 +20,11 @@ are display in a sensible way;
 - Managed possibile exceptions and empty strings.
 
 ## Application screenshots
-![List of Sandwich](../sandwich-club-screenshots/img1.png)
-Format: ![List of Sandwich](url)
+![List of Sandwich](../sandwich-club-screenshots/img1.png)  <!-- .element height="50%" width="50%" -->
+List of Sandwich
 
 ![Sandwich detail (pt1)](../sandwich-club-screenshots/img2.png)
-Format: ![Sandwich detail (pt1)](url)
+Sandwich detail (pt1)
 
 ![Sandwich detail (pt2)](../sandwich-club-screenshots/img3.png)
-Format: ![Sandwich detail (pt2)](url)
+Sandwich detail (pt2)
