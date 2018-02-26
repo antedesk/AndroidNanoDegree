@@ -18,7 +18,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailActivity" />
+
+        <!-- REVIEWER: Pro tip: you can add the android:parentActivityName attribute
+        and set it to the MainActivity to automagically implement proper "up" navigation
+        via app bar on DetailActivity-->
+        <activity android:name=".DetailActivity"
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>

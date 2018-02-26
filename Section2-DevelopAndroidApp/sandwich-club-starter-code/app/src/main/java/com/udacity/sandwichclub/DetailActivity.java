@@ -70,8 +70,24 @@ public class DetailActivity extends AppCompatActivity {
     // a Sandwich Object. These improvements result in a more readable code (in my opinion).
     private void populateUI(Sandwich sandwich) {
 
+        /*
+         You could try to use these two methods as shown in the sample code below (from Picasso documentation):
+
+         Picasso.with(context)
+         .load(url)
+         .placeholder(R.drawable.user_placeholder)
+         .error(R.drawable.user_placeholder_error)
+         .into(imageView);
+         Using Picasso without error() might not cause any problem. However, when it comes to some other APIs
+         (unfortunately, Spotify is one of them), the chance of fighting against some strange values could get higher.
+         So that's why I strongly suggest you to use these two methods in your future projects.
+         */
+
         Picasso.with(this)
                 .load(sandwich.getImage())
+                // image powered by Grace Baptist (http://gbchope.com/events-placeholder/)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.error)
                 .into(ingredientsIv);
 
         setTitle(sandwich.getMainName());

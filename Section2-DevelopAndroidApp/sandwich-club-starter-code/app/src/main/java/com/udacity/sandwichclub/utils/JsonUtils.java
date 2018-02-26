@@ -16,6 +16,17 @@ public class JsonUtils {
 
     private static String JSON_PARSING = "JSON_PARSING";
 
+    // REVIEWER: JSON, Intents, etc. make use of Strings as keys.
+    // These keys should be converted to constants.
+    // There are several benefits of such an approach.
+    public static final String JSON_NAME_KEY = "name";
+    public static final String JSON_MAINNAME_KEY = "mainName";
+    public static final String JSON_AKA_KEY = "alsoKnownAs";
+    public static final String JSON_PLACE_ORIGIN_KEY = "placeOfOrigin";
+    public static final String JSON_IMAGES_KEY = "image";
+    public static final String JSON_DESCRIPTION_KEY = "description";
+    public static final String JSON_INGREDIENTS_KEY = "ingredients";
+
     public static Sandwich parseSandwichJson(String json) {
         //check if the json string is empty
         if(json==null) {
@@ -29,25 +40,26 @@ public class JsonUtils {
             JSONObject sandwichJson = new JSONObject(json);
 
             // parsing the json string
-            String mainName = sandwichJson.getJSONObject("name").getString("mainName");
+            String mainName = sandwichJson.getJSONObject(JSON_NAME_KEY).getString(JSON_MAINNAME_KEY);
 
             // managing the list of aka
             List<String> alsoKnownAs = new ArrayList<>();
-            JSONArray akaJArray = sandwichJson.getJSONObject("name")
-                                                .getJSONArray("alsoKnownAs");
+            JSONArray akaJArray = sandwichJson.getJSONObject(JSON_NAME_KEY)
+                                                .getJSONArray(JSON_AKA_KEY);
             if(akaJArray!=null) // if the list is not null, create the aka list
                 for(int i=0; i<akaJArray.length(); i++)
                     alsoKnownAs.add(akaJArray.getString(i));
 
-            String placeOfOrigin = sandwichJson.getString("placeOfOrigin");
+            // REVIEWER: I would suggest instead of getString() you should use optString()
+            String placeOfOrigin = sandwichJson.optString(JSON_PLACE_ORIGIN_KEY);
 
-            String description = sandwichJson.getString("description");
+            String description = sandwichJson.optString(JSON_DESCRIPTION_KEY);
 
-            String image = sandwichJson.getString("image");
+            String image = sandwichJson.optString(JSON_IMAGES_KEY);
 
             // managing the list of ingredients
             List<String> ingredients = new ArrayList<>();
-            JSONArray ingredientsJArray = sandwichJson.getJSONArray("ingredients");
+            JSONArray ingredientsJArray = sandwichJson.getJSONArray(JSON_INGREDIENTS_KEY);
             if(ingredientsJArray!=null) // if the list is not null, create the aka list
                 for(int i=0; i<ingredientsJArray.length(); i++)
                     ingredients.add(ingredientsJArray.getString(i));
