@@ -21,7 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MovieDetailActivity"></activity>
+        <!-- I implemented proper "up" navigation via app bar on DetailActivity
+            as suggested in the SandwichClub project-->
+        <activity android:name=".MovieDetailActivity"
+            android:parentActivityName=".HomeActivity"></activity>
     </application>
 
 </manifest>

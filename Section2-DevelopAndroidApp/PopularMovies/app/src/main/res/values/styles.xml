@@ -3,9 +3,24 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="DetailsTextView" parent="@android:style/TextAppearance">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/grayWhite</item>
+        <item name="android:layout_margin">@dimen/layout_margin_5dp</item>
+        <item name="android:textSize">@dimen/basic_tv_size</item>
+    </style>
+
+    <style name="ViewSeparator" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/line_separator_thickness</item>
+        <item name="android:layout_margin">@dimen/layout_margin_10dp</item>
+        <item name="android:background">@color/light_gray</item>
     </style>
 
 </resources>

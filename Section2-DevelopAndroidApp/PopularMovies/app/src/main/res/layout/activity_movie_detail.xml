@@ -1,9 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context="it.antedesk.popularmovies.MovieDetailActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/poster_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/movie_image_content_description"
+            android:src="@drawable/placeholder"/>
+
+        <View
+            android:id="@+id/separator1_view"
+            style="@style/ViewSeparator"
+            android:layout_below="@+id/poster_iv"/>
+
+        <TextView
+            android:id="@+id/release_date_label_tv"
+            style="@style/DetailsTextView"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/separator1_view"
+            android:textStyle="bold"
+            android:text="@string/release_date_label_tv"/>
+        <TextView
+            android:id="@+id/release_date_tv"
+            style="@style/DetailsTextView"
+            android:layout_below="@+id/release_date_label_tv"
+            android:text="@string/fake_release_date_tv"/>
+
+        <TextView
+            android:id="@+id/vote_average_label_tv"
+            style="@style/DetailsTextView"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/separator1_view"
+            android:textStyle="bold"
+            android:text="@string/release_date_label_tv"/>
+        <TextView
+            android:id="@+id/vote_average_tv"
+            style="@style/DetailsTextView"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/vote_average_label_tv"
+            android:text="@string/fake_vote_avarage_tv"/>
+        <View
+            android:id="@+id/separator2_view"
+            style="@style/ViewSeparator"
+            android:layout_below="@+id/vote_average_tv"/>
+        <TextView
+            android:id="@+id/overview_label_tv"
+            style="@style/DetailsTextView"
+            android:layout_below="@+id/separator2_view"
+            android:textStyle="bold"
+            android:text="@string/overview_label_tv" />
+        <TextView
+            android:id="@+id/overview_tv"
+            style="@style/DetailsTextView"
+            android:layout_below="@+id/overview_label_tv"
+            android:text="@string/fake_overview_tv"/>
+
+    </RelativeLayout>
+</ScrollView>

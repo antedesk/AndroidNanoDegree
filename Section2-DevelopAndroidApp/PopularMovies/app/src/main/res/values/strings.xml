@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">PopularMovies</string>
+    <string name="sort_criteria">Sorting for: </string>
+    <string-array name="criteria_array">
+        <item>popular</item>
+        <item>top_rated</item>
+    </string-array>
+    <string name="detail_error_message">Ops! You are not online.\nPlease, check your connectivity</string>
+    <string name="error_image_content_description">no video or connection</string>
+    <string name="movie_image_content_description">movie poster</string>
+    <string name="fake_title_tv">The legend of Udacity</string>
+    <string name="vote_average_label_tv">Rating</string>
+    <string name="fake_vote_avarage_tv">9.7</string>
+    <string name="release_date_label_tv">Release Date</string>
+    <string name="fake_release_date_tv">2018/03/05</string>
+    <string name="overview_label_tv">Plot synopsis</string>
+    <string name="fake_overview_tv">
+        Determined to prove himself, Developer Antedesk, the last italian guy on AND, jumps at
+        the chance to crack his new app partnering with his wisey mentor Abhishek to create
+        a majesty app.
+    </string>
 </resources>
