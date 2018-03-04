@@ -1,10 +1,7 @@
 package it.antedesk.popularmovies;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,7 +22,7 @@ import it.antedesk.popularmovies.model.Movie;
 import it.antedesk.popularmovies.utilities.JsonUtils;
 import it.antedesk.popularmovies.utilities.NetworkUtils;
 
-public class HomeActivity extends AppCompatActivity  implements OnItemSelectedListener {
+public class HomeActivity extends AppCompatActivity implements  OnItemSelectedListener {
 
     // ProgressBar variable to show and hide the progress bar
     private ProgressBar mLoadingIndicator;
@@ -36,6 +32,9 @@ public class HomeActivity extends AppCompatActivity  implements OnItemSelectedLi
 
     // the movie API key loaded from BuildConfig
     private static final String API_KEY = BuildConfig.API_KEY;
+
+    // tag for storing in the savedInstanceState the criteria to sort movies
+    private static final String SORT_CRITERIUM = "sortCriterium";
 
     private ArrayList<Movie> movies;
 
@@ -52,24 +51,40 @@ public class HomeActivity extends AppCompatActivity  implements OnItemSelectedLi
         if(NetworkUtils.isOnline(this)){
             initilizeSortingCriteriaSpinner();
 
-            String sortCriteria = "popular";
-            loadMoviesData(sortCriteria);
+            // retrieve saved data from savedInstanceState
+//            if(savedInstanceState==null || !savedInstanceState.containsKey(SORT_CRITERIUM)){
+//                mCriteriaSpinner.setSelection(0);
+//            }else{
+            if(savedInstanceState!=null && savedInstanceState.containsKey(SORT_CRITERIUM)){
+                mCriteriaSpinner.setSelection(
+                        savedInstanceState.getInt(SORT_CRITERIUM, 0));
+            }
+            String sortCriterium = mCriteriaSpinner.getSelectedItem().toString();
+            Log.d(SORT_CRITERIUM, "Current criterium: "+sortCriterium);
+//            loadMoviesData(sortCriterium);
         } else{
             mConnectionErrorLayout.setVisibility(View.VISIBLE);
             mMoviesListScrollView.setVisibility(View.INVISIBLE);
         }
-
     }
 
+    /**
+     * This method initializes the spinner to allow the end-user to select the critiria to
+     * sort the movies list.
+     */
     private void initilizeSortingCriteriaSpinner(){
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.criteria_array, android.R.layout.simple_spinner_item);
+                R.array.criteria_array, R.layout.spinner_row);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mCriteriaSpinner.setAdapter(adapter);
-
-        Log.d("sortCriteria", "inizializzato");
+        mCriteriaSpinner.setOnItemSelectedListener(this);
     }
 
+    /**
+     * This method launches the AsyncTask to retrieve the data via the APIs defined in NetworkUtils
+     * @param sortCriteria is the criteria used to perform the API request and get a list of
+     *                     sorted movies according to the given criteria
+     */
     private void loadMoviesData(String sortCriteria) {
         new FetchMoviesTask().execute(sortCriteria);
     }
@@ -82,24 +97,31 @@ public class HomeActivity extends AppCompatActivity  implements OnItemSelectedLi
         startActivity(intent);
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        //outState.putString("sortCriteria", "INSERT SORT CRITIRIA");
+        // saving the current state of the spinner
+        outState.putInt(SORT_CRITERIUM, mCriteriaSpinner.getSelectedItemPosition());
         super.onSaveInstanceState(outState);
     }
 
+    /**
+     * This overrided method loads a list of movies according to the criterium selected
+     * by the end-user through the spinner.
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String sortCriteria = mCriteriaSpinner.getItemAtPosition(position).toString();
-        Log.d("sortCriteria", "Current Pos: "+position);
+        // getting the current criterium
+        String sortCriterium = parent.getItemAtPosition(position).toString();
+        loadMoviesData(sortCriterium);
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
+    public void onNothingSelected(AdapterView<?> parent) { /* do nothing*/ }
 
-        Log.d("sortCriteria", "ANY CLICK");
-    }
 
     /**
      * In order to get the list of popular/top_rated movies, I define an AsyncTask class to load
@@ -132,7 +154,6 @@ public class HomeActivity extends AppCompatActivity  implements OnItemSelectedLi
                         .getResponseFromHttpUrl(moviesListRequestUrl);
 
                 movies = (ArrayList<Movie>) JsonUtils.getMovieList(jsonMovieResponse);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -69,7 +69,8 @@ public class JsonUtils {
                                             posterPath,
                                             voteAvarage,
                                             overview);
-                    Log.d(JSON_PARSING, movie.toString());
+                    Log.d(JSON_PARSING, movie.getTitle());
+                    //Log.d(JSON_PARSING, movie.toString());
 
                     movies.add(movie);
                 }

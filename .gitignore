@@ -1,7 +1,7 @@
 Section2-DevelopAndroidApp/*/*.iml
 Section2-DevelopAndroidApp/*/.gradle
 Section2-DevelopAndroidApp/*/local.properties
-Section2-DevelopAndroidApp/*/.idea/*
+Section2-DevelopAndroidApp/*/.idea/libraries
 Section2-DevelopAndroidApp/*/.idea/workspace.xml
 Section2-DevelopAndroidApp/*/.DS_Store
 Section2-DevelopAndroidApp/*/build
