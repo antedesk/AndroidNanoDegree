@@ -44,15 +44,16 @@ public class HomeActivity extends AppCompatActivity  implements OnItemSelectedLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-        mConnectionErrorLayout = (LinearLayout) findViewById(R.id.connection_error_layout);
-        mMoviesListScrollView = (ScrollView) findViewById(R.id.movies_list_sv);
-        mCriteriaSpinner = (Spinner) findViewById(R.id.spinner_sort_criteria);
+        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+        mConnectionErrorLayout = findViewById(R.id.connection_error_layout);
+        mMoviesListScrollView =  findViewById(R.id.movies_list_sv);
+        mCriteriaSpinner = findViewById(R.id.spinner_sort_criteria);
 
         if(NetworkUtils.isOnline(this)){
             initilizeSortingCriteriaSpinner();
 
-            loadMoviesData();
+            String sortCriteria = "popular";
+            loadMoviesData(sortCriteria);
         } else{
             mConnectionErrorLayout.setVisibility(View.VISIBLE);
             mMoviesListScrollView.setVisibility(View.INVISIBLE);
@@ -65,16 +66,15 @@ public class HomeActivity extends AppCompatActivity  implements OnItemSelectedLi
                 R.array.criteria_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mCriteriaSpinner.setAdapter(adapter);
+
+        Log.d("sortCriteria", "inizializzato");
     }
 
-    private void loadMoviesData() {
-       // showMovieDataView();
-        String sortMode = "popular";
-        new FetchMoviesTask().execute(sortMode);
+    private void loadMoviesData(String sortCriteria) {
+        new FetchMoviesTask().execute(sortCriteria);
     }
 
      void launchDetailActivity(View view) {
-
         Intent intent = new Intent(this, MovieDetailActivity.class);
         Movie movie = movies.get(0);
         Log.d(MovieDetailActivity.MOVIE_TAG, movie.toString());
@@ -92,12 +92,13 @@ public class HomeActivity extends AppCompatActivity  implements OnItemSelectedLi
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String sortCriteria = mCriteriaSpinner.getItemAtPosition(position).toString();
-        Log.d("sortCriteria", ""+position);
+        Log.d("sortCriteria", "Current Pos: "+position);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+        Log.d("sortCriteria", "ANY CLICK");
     }
 
     /**
