@@ -15,8 +15,6 @@ import it.antedesk.popularmovies.utilities.NetworkUtils;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
-    // Basic path of image url
-    private static final String IMAGE_URL = "http://image.tmdb.org/t/p/";
 
     // TAG for intent and log
     protected static final String MOVIE_TAG = "selectedMovie";
@@ -61,9 +59,12 @@ public class MovieDetailActivity extends AppCompatActivity {
     private void populateUI(Movie movie) {
         setTitle(movie.getTitle());
         String size = "w500";
-        String imageURL = IMAGE_URL+size+movie.getPosterPath();
+        String imageURL = NetworkUtils.IMAGE_URL+size+movie.getPosterPath();
         Picasso.with(this)
                 .load(imageURL)
+                .resize(getResources().getDimensionPixelSize(R.dimen.poster_width),
+                        getResources().getDimensionPixelSize(R.dimen.poster_height))
+                .centerCrop()
                 // image powered by Grace Baptist (http://gbchope.com/events-placeholder/)
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.error)

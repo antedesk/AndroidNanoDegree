@@ -30,6 +30,8 @@ public class NetworkUtils {
     private static final String BASIC_URL =
             "http://api.themoviedb.org/3/movie/";
 
+    // Basic path of image url
+    public static final String IMAGE_URL = "http://image.tmdb.org/t/p/";
     //
     private final static String API_KEY_QUERY_PARAM = "api_key";
 

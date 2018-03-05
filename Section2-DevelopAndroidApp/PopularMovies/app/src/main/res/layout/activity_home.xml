@@ -7,6 +7,7 @@
     tools:context="it.antedesk.popularmovies.HomeActivity">
 
     <LinearLayout
+        android:id="@+id/spinner_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true">
@@ -26,20 +27,18 @@
             android:layout_marginStart="@dimen/layout_margin_5dp"
             android:spinnerMode="dropdown" />
     </LinearLayout>
-    <ScrollView
+    <GridView
         android:id="@+id/movies_list_sv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="launchDetailActivity"
-            tools:ignore="OnClick" />
-
-    </ScrollView>
-
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/spinner_layout"
+        android:layout_marginTop="@dimen/layout_margin_10dp"
+        android:gravity="center"
+        android:columnWidth="150dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth">
+    </GridView>
     <!-- For error purpose. By default, this layout is invisible -->
     <LinearLayout
         android:id="@+id/connection_error_layout"

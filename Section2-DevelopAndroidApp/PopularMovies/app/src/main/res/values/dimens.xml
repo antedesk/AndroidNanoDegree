@@ -9,4 +9,6 @@
     <dimen name="layout_margin_5dp">5dp</dimen>
     <dimen name="layout_margin_10dp">10dp</dimen>
     <dimen name="padding_5dp">5dp</dimen>
+    <dimen name="poster_width">150dp</dimen>
+    <dimen name="poster_height">200dp</dimen>
 </resources>
