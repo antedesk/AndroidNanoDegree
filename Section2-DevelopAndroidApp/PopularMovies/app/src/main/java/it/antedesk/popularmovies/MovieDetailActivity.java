@@ -3,7 +3,6 @@ package it.antedesk.popularmovies;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,11 +12,9 @@ import com.squareup.picasso.Picasso;
 import it.antedesk.popularmovies.model.Movie;
 import it.antedesk.popularmovies.utilities.NetworkUtils;
 
+import static it.antedesk.popularmovies.utilities.SupportVariablesDefinition.*;
+
 public class MovieDetailActivity extends AppCompatActivity {
-
-
-    // TAG for intent and log
-    protected static final String MOVIE_TAG = "selectedMovie";
 
     // UI elements
     private ImageView mPosterIv;
@@ -50,6 +47,9 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         // retriving the movie form intent
         Movie selectedMovie = intent.getParcelableExtra(MOVIE_TAG);
+        if (selectedMovie == null) {
+            closeOnError();
+        }
 
         // populate the UI
         populateUI(selectedMovie);
@@ -58,19 +58,15 @@ public class MovieDetailActivity extends AppCompatActivity {
     // This method is used to populate the UI by using the given movie
     private void populateUI(Movie movie) {
         setTitle(movie.getTitle());
-        String size = "w500";
-        String imageURL = NetworkUtils.IMAGE_URL+size+movie.getPosterPath();
+        String imageURL = IMAGE_URL+SIZE_W185+movie.getPosterPath();
         Picasso.with(this)
                 .load(imageURL)
-                .resize(getResources().getDimensionPixelSize(R.dimen.poster_width),
-                        getResources().getDimensionPixelSize(R.dimen.poster_height))
-                .centerCrop()
                 // image powered by Grace Baptist (http://gbchope.com/events-placeholder/)
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.error)
                 .into(mPosterIv);
         mReleaseDateTv.setText(movie.getReleaseDate());
-        mRatingTv.setText(""+movie.getVoteAvarage());
+        mRatingTv.setText(String.format("%s", movie.getVoteAvarage()));
         mPlotSynopsisTv.setText(movie.getOverview());
     }
 

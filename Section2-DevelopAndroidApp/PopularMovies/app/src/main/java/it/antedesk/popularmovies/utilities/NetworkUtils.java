@@ -14,6 +14,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
+import static it.antedesk.popularmovies.utilities.SupportVariablesDefinition.*;
+
 /**
  * Created by Antedesk on 03/03/2018.
  *
@@ -23,16 +25,6 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
-    // getting the the class name to use as tag in Log method
-    private static final String TAG = NetworkUtils.class.getSimpleName();
-
-    // defining the base url to get the data
-    private static final String BASIC_URL =
-            "http://api.themoviedb.org/3/movie/";
-
-    // Basic path of image url
-    public static final String IMAGE_URL = "http://image.tmdb.org/t/p/";
-    //
     private final static String API_KEY_QUERY_PARAM = "api_key";
 
     /**

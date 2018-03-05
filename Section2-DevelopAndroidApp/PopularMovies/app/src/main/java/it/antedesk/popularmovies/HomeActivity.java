@@ -23,6 +23,8 @@ import it.antedesk.popularmovies.model.Movie;
 import it.antedesk.popularmovies.utilities.JsonUtils;
 import it.antedesk.popularmovies.utilities.NetworkUtils;
 
+import static it.antedesk.popularmovies.utilities.SupportVariablesDefinition.*;
+
 public class HomeActivity extends AppCompatActivity implements OnItemSelectedListener, AdapterView.OnItemClickListener {
 
     // ProgressBar variable to show and hide the progress bar
@@ -30,13 +32,6 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
     private Spinner mCriteriaSpinner;
     private GridView mMoviesGridView;
     private LinearLayout mConnectionErrorLayout;
-
-    // the movie API key loaded from BuildConfig
-    private static final String API_KEY = BuildConfig.API_KEY;
-
-    // tag for storing in the savedInstanceState the criteria to sort movies
-    private static final String SORT_CRITERIUM = "sortCriterium";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +78,6 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
     }
 
     private void showMoviesDataView(List<Movie> movies){
-        Log.d("test_showMovies", movies.get(0).getTitle());
         mMoviesGridView.setAdapter(new MovieImageAdapter(this, movies));
         mMoviesGridView.setOnItemClickListener(this);
     }
@@ -118,11 +112,11 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         // get the selected movie
         Movie movie = (Movie) mMoviesGridView.getItemAtPosition(position);
-        Log.d(MovieDetailActivity.MOVIE_TAG, movie.toString());
+        Log.d(MOVIE_TAG, movie.toString());
 
         // create a new intent, add the selected movie, start the detail activity
         Intent intent = new Intent(this, MovieDetailActivity.class);
-        intent.putExtra(MovieDetailActivity.MOVIE_TAG, movie);
+        intent.putExtra(MOVIE_TAG, movie);
         startActivity(intent);
     }
 
@@ -171,7 +165,6 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
             mLoadingIndicator.setVisibility(View.INVISIBLE);
 
             if (movies != null) {
-                Log.d("test", movies.get(0).getTitle());
                 showMoviesDataView(movies);
             } else {
                 showErrorMessage();

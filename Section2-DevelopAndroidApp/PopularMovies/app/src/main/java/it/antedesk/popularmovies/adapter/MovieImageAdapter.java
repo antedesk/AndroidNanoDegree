@@ -5,17 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import it.antedesk.popularmovies.R;
 import it.antedesk.popularmovies.model.Movie;
-import it.antedesk.popularmovies.utilities.NetworkUtils;
+
+import static it.antedesk.popularmovies.utilities.SupportVariablesDefinition.*;
 
 /**
  * Created by Antedesk on 04/03/2018.
@@ -63,8 +62,7 @@ public class MovieImageAdapter extends BaseAdapter {
 
         Movie movie = this.moviesList.get(position);
 
-        String size = "w500";
-        String imageURL = NetworkUtils.IMAGE_URL+size+movie.getPosterPath();
+        String imageURL = IMAGE_URL+SIZE_W185+movie.getPosterPath();
         Picasso.with(mContext)
                 .load(imageURL)
                 // image powered by Grace Baptist (http://gbchope.com/events-placeholder/)
