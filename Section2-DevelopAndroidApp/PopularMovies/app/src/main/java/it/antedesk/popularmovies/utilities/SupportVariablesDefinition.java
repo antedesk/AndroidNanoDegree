@@ -31,4 +31,6 @@ public final class SupportVariablesDefinition {
 
     // TAG for intent and log
     public static final String MOVIE_TAG = "selectedMovie";
+
+
 }

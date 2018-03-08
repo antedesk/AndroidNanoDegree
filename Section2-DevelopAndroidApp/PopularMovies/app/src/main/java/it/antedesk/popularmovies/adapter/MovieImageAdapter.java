@@ -53,7 +53,6 @@ public class MovieImageAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.movie_item, null);
             imageView = (ImageView) convertView.findViewById(R.id.grid_poster_iv);
-            //imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setPadding(2, 2, 2, 2);
         } else {
@@ -67,7 +66,7 @@ public class MovieImageAdapter extends BaseAdapter {
                 .load(imageURL)
                 // image powered by Grace Baptist (http://gbchope.com/events-placeholder/)
                 .placeholder(R.drawable.placeholder)
-                .error(R.drawable.error)
+                .error(R.drawable.error_poster)
                 .into(imageView);
 
         return imageView;

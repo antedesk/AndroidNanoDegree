@@ -15,6 +15,7 @@
         android:id="@+id/spinner_label_tv"
         style="@style/DetailsTextView"
         android:text="@string/sort_criteria"
+        android:gravity="center_vertical"
         android:textStyle="bold"/>
 
         <Spinner
@@ -39,6 +40,12 @@
         android:numColumns="auto_fit"
         android:stretchMode="columnWidth">
     </GridView>
+<!--
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/movies_list_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+-->
     <!-- For error purpose. By default, this layout is invisible -->
     <LinearLayout
         android:id="@+id/connection_error_layout"
