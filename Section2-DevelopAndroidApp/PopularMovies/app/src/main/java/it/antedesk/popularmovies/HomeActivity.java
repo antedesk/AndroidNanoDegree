@@ -99,8 +99,6 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
         } else {
             loaderManager.restartLoader(MOVIES_LOADER, criteriumBundle, this);
         }
-
-        //new FetchMoviesTask().execute(sortCriterium);
     }
 
     private void showMoviesDataView(List<Movie> movies){
@@ -205,58 +203,5 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
     @Override
     public void onLoaderReset(Loader<List<Movie>> loader) { /* do nothing */ }
 
-
-    /**
-     * In order to get the list of popular/top_rated movies, I define an AsyncTask class to load
-     * the movies list in background.
-     */
-/*
-    private class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // showing the loading indicator
-            mLoadingIndicator.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected List<Movie> doInBackground(String... params) {
-
-            // checking if the params are passed to the AsyncTask
-            if (params.length == 0) {
-                return null;
-            }
-
-            // retriving the sort modality chosen by the user
-            String sortMode = params[0];
-            URL moviesListRequestUrl = NetworkUtils.buildMovieListUrl(sortMode, API_KEY);
-            // getting the sorted movies list
-            List<Movie> movies = null;
-            try {
-                String jsonMovieResponse = NetworkUtils
-                        .getResponseFromHttpUrl(moviesListRequestUrl);
-
-                movies = (ArrayList<Movie>) JsonUtils.getMovieList(jsonMovieResponse);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return movies;
-        }
-
-        @Override
-        protected void onPostExecute(List<Movie> movies) {
-            // hiding the loading indicator
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-
-            if (movies != null) {
-                showMoviesDataView(movies);
-            } else {
-                showErrorMessage();
-            }
-        }
-    }
-*/
 }
 
