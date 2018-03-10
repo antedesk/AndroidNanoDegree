@@ -83,6 +83,10 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
                 mCriteriaSpinner.setSelection(
                         savedInstanceState.getInt(SORT_CRITERIUM, 0));
             }
+            //
+            if(mCriteriaSpinner.getSelectedItem()==null){
+                mCriteriaSpinner.setSelection(0);
+            }
             String sortCriterium = mCriteriaSpinner.getSelectedItem().toString();
             Log.d(SORT_CRITERIUM, "Current criterium: "+sortCriterium);
         } else{
