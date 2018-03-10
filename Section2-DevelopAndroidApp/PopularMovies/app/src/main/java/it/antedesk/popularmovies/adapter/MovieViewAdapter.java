@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -27,7 +28,21 @@ public class MovieViewAdapter extends RecyclerView.Adapter<MovieViewAdapter.Movi
     private List<Movie> movieList;
     private Context parentContex;
 
-    public MovieViewAdapter(){}
+    private final MovieViewAdapterOnClickHandler mClickHandler;
+
+    // COMPLETED (1) Add an interface called ForecastAdapterOnClickHandler
+    // COMPLETED (2) Within that interface, define a void method that access a String as a parameter
+    /**
+     * The interface that receives onClick messages.
+     */
+    public interface MovieViewAdapterOnClickHandler {
+        void onClick(Movie selectedMovie);
+    }
+
+
+    public MovieViewAdapter(MovieViewAdapterOnClickHandler clickHandler){
+        mClickHandler = clickHandler;
+    }
 
     @Override
     public MovieAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -57,8 +72,7 @@ public class MovieViewAdapter extends RecyclerView.Adapter<MovieViewAdapter.Movi
         return movieList.size();
     }
 
-    public class MovieAdapterViewHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener {
+    public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
         public final ImageView mPosterIV;
 
@@ -68,11 +82,14 @@ public class MovieViewAdapter extends RecyclerView.Adapter<MovieViewAdapter.Movi
             super(itemView);
             mPosterIV = itemView.findViewById(R.id.grid_poster_iv);
             itemView.setOnClickListener(this);
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-
+            int adapterPosition = getAdapterPosition();
+            Movie selectedMovie = movieList.get(adapterPosition);
+            mClickHandler.onClick(selectedMovie);
         }
     }
 

@@ -34,6 +34,7 @@ import it.antedesk.popularmovies.utilities.NetworkUtils;
 import static it.antedesk.popularmovies.utilities.SupportVariablesDefinition.*;
 
 public class HomeActivity extends AppCompatActivity implements OnItemSelectedListener,
+        MovieViewAdapter.MovieViewAdapterOnClickHandler,
         AdapterView.OnItemClickListener, LoaderCallbacks<List<Movie>> {
 
     // ProgressBar variable to show and hide the progress bar
@@ -73,7 +74,7 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
             mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setHasFixedSize(true);
 
-            mMovieViewAdapter = new MovieViewAdapter();
+            mMovieViewAdapter = new MovieViewAdapter(this);
 
             initilizeSortingCriteriaSpinner();
             if(savedInstanceState!=null && savedInstanceState.containsKey(SORT_CRITERIUM)){
@@ -214,5 +215,14 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
     @Override
     public void onLoaderReset(Loader<List<Movie>> loader) { /* do nothing */ }
 
+    @Override
+    public void onClick(Movie selectedMovie) {
+        Log.d(MOVIE_TAG, selectedMovie.toString());
+
+        // create a new intent, add the selected movie, start the detail activity
+        Intent intent = new Intent(this, MovieDetailActivity.class);
+        intent.putExtra(MOVIE_TAG, selectedMovie);
+        startActivity(intent);
+    }
 }
 
