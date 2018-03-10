@@ -43,6 +43,7 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
     private RecyclerView mRecyclerView;
     private MovieViewAdapter mMovieViewAdapter;
     private LinearLayout mConnectionErrorLayout;
+    private LinearLayout mSpinnerLinearLayout;
 
     // This number will uniquely identify our Loader and is chosen arbitrarily.
     private static final int MOVIES_LOADER = 22;
@@ -60,6 +61,7 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
         mCriteriaSpinner = findViewById(R.id.spinner_sort_criteria);
         mRecyclerView = findViewById(R.id.movies_list_rv);
         mConnectionErrorLayout = findViewById(R.id.connection_error_layout);
+        mSpinnerLinearLayout = findViewById(R.id.spinner_layout);
 
         if(NetworkUtils.isOnline(this)){
 
@@ -127,6 +129,7 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
 
     public void showErrorMessage(){
         mConnectionErrorLayout.setVisibility(View.VISIBLE);
+        mSpinnerLinearLayout.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.INVISIBLE);
     }
 
@@ -156,6 +159,15 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
 
     }
 
+    @Override
+    public void onClick(Movie selectedMovie) {
+        Log.d(MOVIE_TAG, selectedMovie.toString());
+
+        // create a new intent, add the selected movie, start the detail activity
+        Intent intent = new Intent(this, MovieDetailActivity.class);
+        intent.putExtra(MOVIE_TAG, selectedMovie);
+        startActivity(intent);
+    }
     /**
      * In order to get the list of popular/top_rated movies, I define an AsyncTaskLoader class
      * to load the movies list in background.
@@ -215,14 +227,5 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
     @Override
     public void onLoaderReset(Loader<List<Movie>> loader) { /* do nothing */ }
 
-    @Override
-    public void onClick(Movie selectedMovie) {
-        Log.d(MOVIE_TAG, selectedMovie.toString());
-
-        // create a new intent, add the selected movie, start the detail activity
-        Intent intent = new Intent(this, MovieDetailActivity.class);
-        intent.putExtra(MOVIE_TAG, selectedMovie);
-        startActivity(intent);
-    }
 }
 

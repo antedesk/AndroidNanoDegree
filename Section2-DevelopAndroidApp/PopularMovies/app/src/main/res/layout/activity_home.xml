@@ -42,20 +42,23 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical"
-        android:background="@color/grayWhite"
+        android:background="@drawable/error_background"
         android:visibility="invisible">
         <!-- image source https://tinyurl.com/y9czm97a -->
         <ImageView
             android:layout_width="@dimen/connection_error_iv"
             android:layout_height="@dimen/connection_error_iv"
+            android:layout_margin="@dimen/layout_margin_5dp"
+            android:layout_gravity="center"
             android:src="@drawable/broken_tv"
-            android:contentDescription="@string/error_image_content_description"
-            android:layout_gravity="center"/>
+            android:contentDescription="@string/error_image_content_description"/>
         <TextView
             style="@style/DetailsTextView"
-            android:text="@string/detail_error_message"
             android:layout_gravity="center"
+            android:layout_margin="@dimen/layout_margin_5dp"
+            android:text="@string/detail_error_message"
             android:textStyle="bold"
+            android:textColor="@color/black"
             android:textAlignment="center"/>
     </LinearLayout>
 
