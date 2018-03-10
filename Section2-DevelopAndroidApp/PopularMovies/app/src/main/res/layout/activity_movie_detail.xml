@@ -14,10 +14,9 @@
         <ImageView
             android:id="@+id/poster_iv"
             android:layout_width="@dimen/poster_w185dp"
-            android:layout_height="@dimen/poster_h220dp"
+            android:layout_height="@dimen/poster_h277dp"
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/movie_image_content_description"
-            android:adjustViewBounds="true"
             android:layout_margin="@dimen/layout_margin_10dp"
             android:src="@drawable/placeholder"/>
 

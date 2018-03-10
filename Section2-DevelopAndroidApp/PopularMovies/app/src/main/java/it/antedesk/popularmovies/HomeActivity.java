@@ -8,6 +8,9 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -23,7 +26,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.antedesk.popularmovies.adapter.MovieImageAdapter;
+import it.antedesk.popularmovies.adapter.MovieViewAdapter;
 import it.antedesk.popularmovies.model.Movie;
 import it.antedesk.popularmovies.utilities.JsonUtils;
 import it.antedesk.popularmovies.utilities.NetworkUtils;
@@ -36,12 +39,16 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
     // ProgressBar variable to show and hide the progress bar
     private ProgressBar mLoadingIndicator;
     private Spinner mCriteriaSpinner;
-    private GridView mMoviesGridView;
+    private RecyclerView mRecyclerView;
+    private MovieViewAdapter mMovieViewAdapter;
     private LinearLayout mConnectionErrorLayout;
 
     // This number will uniquely identify our Loader and is chosen arbitrarily.
     private static final int MOVIES_LOADER = 22;
     private static final String MOVIES_LOADER_CRITERIUM = "load_criterium";
+    private static final int numberOfColums = 2;
+
+    private List<Movie> movies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +57,23 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
 
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
         mCriteriaSpinner = findViewById(R.id.spinner_sort_criteria);
-        mMoviesGridView = findViewById(R.id.movies_list_sv);
+        mRecyclerView = findViewById(R.id.movies_list_rv);
         mConnectionErrorLayout = findViewById(R.id.connection_error_layout);
 
         if(NetworkUtils.isOnline(this)){
 
+            //start Loader for getting movies list
             getSupportLoaderManager().initLoader(MOVIES_LOADER, null, this);
+
+            // creating a LinearLayoutManager
+            GridLayoutManager layoutManager
+                    = new GridLayoutManager(this, numberOfColums);
+
+            // setting the layoutManager on mRecyclerView
+            mRecyclerView.setLayoutManager(layoutManager);
+            mRecyclerView.setHasFixedSize(true);
+
+            mMovieViewAdapter = new MovieViewAdapter();
 
             initilizeSortingCriteriaSpinner();
             if(savedInstanceState!=null && savedInstanceState.containsKey(SORT_CRITERIUM)){
@@ -102,13 +120,13 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
     }
 
     private void showMoviesDataView(List<Movie> movies){
-        mMoviesGridView.setAdapter(new MovieImageAdapter(this, movies));
-        mMoviesGridView.setOnItemClickListener(this);
+        mRecyclerView.setAdapter(mMovieViewAdapter);
+        mMovieViewAdapter.setMoviesData(movies);
     }
 
     public void showErrorMessage(){
         mConnectionErrorLayout.setVisibility(View.VISIBLE);
-        mMoviesGridView.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -134,14 +152,7 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // get the selected movie
-        Movie movie = (Movie) mMoviesGridView.getItemAtPosition(position);
-        Log.d(MOVIE_TAG, movie.toString());
 
-        // create a new intent, add the selected movie, start the detail activity
-        Intent intent = new Intent(this, MovieDetailActivity.class);
-        intent.putExtra(MOVIE_TAG, movie);
-        startActivity(intent);
     }
 
     /**
@@ -172,7 +183,7 @@ public class HomeActivity extends AppCompatActivity implements OnItemSelectedLis
                 }
 
                 // getting the sorted movies list
-                List<Movie> movies = null;
+                movies = null;
                 URL moviesListRequestUrl = NetworkUtils.buildMovieListUrl(sortCriterium, API_KEY);
                 try {
                     String jsonMovieResponse = NetworkUtils

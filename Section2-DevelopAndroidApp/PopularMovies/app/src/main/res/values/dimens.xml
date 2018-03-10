@@ -12,5 +12,6 @@
     <dimen name="poster_width">150dp</dimen>
     <dimen name="poster_height">200dp</dimen>
     <dimen name="poster_w185dp">185dp</dimen>
-    <dimen name="poster_h220dp">220dp</dimen>
+    <dimen name="poster_h277dp">277dp</dimen>
+    <dimen name="image_frame">2dp</dimen>
 </resources>
