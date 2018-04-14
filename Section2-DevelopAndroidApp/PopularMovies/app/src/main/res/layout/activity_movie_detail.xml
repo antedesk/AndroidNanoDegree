@@ -67,5 +67,13 @@
             android:layout_below="@+id/overview_label_tv"
             android:text="@string/fake_overview_tv"/>
 
+        <!-- Used by the AsyncTask for fetching the movies list. By default it is invisible-->
+        <ProgressBar
+            android:id="@+id/pb_loading_indicator"
+            android:layout_height="@dimen/progress_bar_size"
+            android:layout_width="@dimen/progress_bar_size"
+            android:layout_centerInParent="true"
+            android:visibility="invisible" />
+
     </RelativeLayout>
 </ScrollView>

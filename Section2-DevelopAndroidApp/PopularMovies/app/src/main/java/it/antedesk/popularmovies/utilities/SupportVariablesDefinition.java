@@ -23,14 +23,23 @@ public final class SupportVariablesDefinition {
     public static final String TAG = NetworkUtils.class.getSimpleName();
 
     // defining the base url to get the data
-    public static final String BASIC_URL =
-            "http://api.themoviedb.org/3/movie/";
+    public static final String BASIC_URL = "http://api.themoviedb.org/3/movie/";
+
+    // video urlpath
+    public static final String VIDEOS = "videos";
+
+    // reviews urlpath
+    public static final String REVIEWS = "reviews";
+
+    // reviews urlpath
+    public static final String CASTS = "casts";
 
     // Basic path of image url
     public static final String IMAGE_URL = "http://image.tmdb.org/t/p/";
 
     // TAG for intent and log
     public static final String MOVIE_TAG = "selectedMovie";
+
 
 
 }

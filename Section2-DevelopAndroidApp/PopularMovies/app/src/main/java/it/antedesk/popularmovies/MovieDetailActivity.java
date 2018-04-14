@@ -1,20 +1,35 @@
 package it.antedesk.popularmovies;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import it.antedesk.popularmovies.model.Cast;
 import it.antedesk.popularmovies.model.Movie;
+import it.antedesk.popularmovies.model.Review;
+import it.antedesk.popularmovies.model.Trailer;
+import it.antedesk.popularmovies.utilities.JsonUtils;
 import it.antedesk.popularmovies.utilities.NetworkUtils;
 
 import static it.antedesk.popularmovies.utilities.SupportVariablesDefinition.*;
 
-public class MovieDetailActivity extends AppCompatActivity {
+public class MovieDetailActivity extends AppCompatActivity implements LoaderCallbacks<Movie> {
 
     // UI elements
     private ImageView mPosterIv;
@@ -22,6 +37,17 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView mRatingTv;
     private TextView mPlotSynopsisTv;
 
+    private ProgressBar mLoadingIndicator;
+
+    // This number will uniquely identify our Loader and is chosen arbitrarily.
+    private static final int MOVIES_LOADER = 22;
+    private static final String ID = "id";
+    private static final String TITLE = "title";
+    private static final String RELEASE_DATE = "releaseDate";
+    private static final String POSTER_PATH = "posterPath";
+    private static final String OVERVIEW = "overview";
+    private static final String VOTE_AVARAGE = "voteAvarage";
+    private static final String VOTE_COUNT = "voteCount";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +59,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         mReleaseDateTv = findViewById(R.id.release_date_tv);
         mRatingTv = findViewById(R.id.vote_average_tv);
         mPlotSynopsisTv = findViewById(R.id.overview_tv);
+        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
         // Checking the internet connnection.
         if(!NetworkUtils.isOnline(this)){
@@ -46,13 +73,36 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
 
         // retriving the movie form intent
-        Movie selectedMovie = intent.getParcelableExtra(MOVIE_TAG);
-        if (selectedMovie == null) {
+        Movie mMovie = intent.getParcelableExtra(MOVIE_TAG);
+        if (mMovie == null) {
             closeOnError();
         }
 
         // populate the UI
-        populateUI(selectedMovie);
+        //populateUI(mMovie);
+        loadAdditionalInfo(mMovie);
+    }
+
+    private void loadAdditionalInfo(Movie movie) {
+        // creating a new bundle and adding the current movie's info
+        Bundle movieBundle = new Bundle();
+        movieBundle.putLong(ID, movie.getId());
+        movieBundle.putString(TITLE, movie.getTitle());
+        movieBundle.putString(RELEASE_DATE, movie.getReleaseDate());
+        movieBundle.putString(POSTER_PATH, movie.getPosterPath());
+        movieBundle.putDouble(VOTE_AVARAGE, movie.getVoteAvarage());
+        movieBundle.putString(OVERVIEW, movie.getOverview());
+        movieBundle.putLong(VOTE_COUNT, movie.getVoteCount());
+        // initialize loaderManager
+        LoaderManager loaderManager = getSupportLoaderManager();
+        // Get the Loader by calling getLoader and passing the ID we specified
+        Loader<String> moviesLoader = loaderManager.getLoader(MOVIES_LOADER);
+        // If the Loader was null, initialize it. Else, restart it.
+        if (moviesLoader == null) {
+            loaderManager.initLoader(MOVIES_LOADER, movieBundle, this);
+        } else {
+            loaderManager.restartLoader(MOVIES_LOADER, movieBundle, this);
+        }
     }
 
     // This method is used to populate the UI by using the given movie
@@ -74,4 +124,76 @@ public class MovieDetailActivity extends AppCompatActivity {
         finish();
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
+
+
+    @SuppressLint("StaticFieldLeak")
+    @Override
+    public Loader<Movie> onCreateLoader(int id, final Bundle args) {
+        return new AsyncTaskLoader<Movie>(this) {
+            @Override
+            protected void onStartLoading() {
+                super.onStartLoading();
+                if (args == null) {
+                    return;
+                }
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+                forceLoad();
+            }
+
+            @Override
+            public Movie loadInBackground() {
+                Movie movie = new Movie(
+                        args.getLong(ID),
+                        args.getString(TITLE),
+                        args.getString(RELEASE_DATE),
+                        args.getString(POSTER_PATH),
+                        args.getDouble(VOTE_AVARAGE),
+                        args.getString(OVERVIEW),
+                        args.getLong(VOTE_COUNT)
+                );
+
+                URL trailersListRequestUrl = NetworkUtils.buildItemsListUrl(movie.getId(),VIDEOS,API_KEY);
+                URL reviewsListRequestUrl = NetworkUtils.buildItemsListUrl(movie.getId(),REVIEWS,API_KEY);
+                URL castsListRequestUrl = NetworkUtils.buildItemsListUrl(movie.getId(),CASTS,API_KEY);
+                try {
+                    String jsonTrailersResponse = NetworkUtils
+                            .getResponseFromHttpUrl(trailersListRequestUrl);
+                    String jsonReviewsResponse = NetworkUtils
+                            .getResponseFromHttpUrl(reviewsListRequestUrl);
+                    String jsonCastsResponse = NetworkUtils
+                            .getResponseFromHttpUrl(castsListRequestUrl);
+
+                    List<Trailer> trailers = JsonUtils.getTrailersList(jsonTrailersResponse);
+                    List<Review> reviews = JsonUtils.getReviewsList(jsonReviewsResponse);
+                    List<Cast> casts = JsonUtils.getCastsList(jsonCastsResponse);
+                    movie.setTrailers(trailers);
+                    movie.setReviews(reviews);
+                    movie.setCasts(casts);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return movie;
+            }
+        };
+    }
+
+    private void showMoviesDataView(Movie movie){
+        populateUI(movie);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Movie> loader, Movie data) {
+        // hiding the loading indicator
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+       if (data != null) {
+            showMoviesDataView(data);
+        }  /*else {
+            showErrorMessage();
+        }*/
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Movie> loader) { /*DO NOTHING*/ }
 }

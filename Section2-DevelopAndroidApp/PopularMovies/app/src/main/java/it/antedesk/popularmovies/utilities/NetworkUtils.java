@@ -55,6 +55,35 @@ public class NetworkUtils {
     }
 
     /**
+     * create an URL to retrieve a specific info related to the movie such as
+     * - reviews
+     * - trailers
+     * - cast
+     * @param movieId is the id of the selected movie
+     * @param infoType is the information to retrieve
+     * @param apiKey is the API key to do the request
+     * @return
+     */
+    public static URL buildItemsListUrl(long movieId, String infoType, String apiKey) {
+        Uri builtUri = Uri.parse(BASIC_URL).buildUpon()
+                .appendPath(""+movieId)
+                .appendPath(infoType)
+                .appendQueryParameter(API_KEY_QUERY_PARAM, apiKey)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        Log.v(TAG, "Built URI " + url);
+
+        return url;
+    }
+
+    /**
      * This method returns the entire result from the HTTP response.
      * This method is from Lesson 2 - Connect to the Internet.
      *

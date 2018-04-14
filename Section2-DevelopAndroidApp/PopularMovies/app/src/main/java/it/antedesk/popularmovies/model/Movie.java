@@ -29,18 +29,24 @@ public class Movie implements Parcelable {
     private String posterPath;
     private double voteAvarage;
     private String overview;
+    private long voteCount;
+    // a movie can have a list of trailers and reviews
+    private List<Trailer> trailers;
+    private List<Review> reviews;
+    private List<Cast> casts;
 
     // class constructor
     public Movie(){}
 
     public Movie(long id, String title, String releaseDate, String posterPath,
-                 double voteAvarage, String overview) {
+                 double voteAvarage, String overview, long voteCount) {
         this.id = id;
         this.title = title;
         this.releaseDate = releaseDate;
         this.posterPath = posterPath;
         this.voteAvarage = voteAvarage;
         this.overview = overview;
+        this.voteCount = voteCount;
     }
 
     // Getter and Setter for this class
@@ -75,32 +81,48 @@ public class Movie implements Parcelable {
         return releaseDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
     public String getPosterPath() {
         return posterPath;
-    }
-
-    public void setPosterPath(String posterPath) {
-        this.posterPath = posterPath;
     }
 
     public double getVoteAvarage() {
         return voteAvarage;
     }
 
-    public void setVoteAvarage(int voteAvarage) {
-        this.voteAvarage = voteAvarage;
-    }
-
     public String getOverview() {
         return overview;
     }
 
-    public void setOverview(String overview) {
-        this.overview = overview;
+    public long getVoteCount() {
+        return voteCount;
+    }
+
+    public void setVoteCount(long voteCount) {
+        this.voteCount = voteCount;
+    }
+
+    public List<Trailer> getTrailers() {
+        return trailers;
+    }
+
+    public void setTrailers(List<Trailer> trailers) {
+        this.trailers = trailers;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public List<Cast> getCasts() {
+        return casts;
+    }
+
+    public void setCasts(List<Cast> casts) {
+        this.casts = casts;
     }
 
     // I added the toString method because it's always usefull for debugging
@@ -132,7 +154,6 @@ public class Movie implements Parcelable {
         dest.writeDouble(voteAvarage);
         dest.writeString(overview);
     }
-
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
         @Override
