@@ -1,79 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
     tools:context="it.antedesk.popularmovies.MovieDetailActivity">
-
-    <RelativeLayout
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:fitsSystemWindows="true">
 
-        <ImageView
-            android:id="@+id/poster_iv"
-            android:layout_width="@dimen/poster_w185dp"
-            android:layout_height="@dimen/poster_h277dp"
-            android:layout_centerHorizontal="true"
-            android:contentDescription="@string/movie_image_content_description"
-            android:layout_margin="@dimen/layout_margin_10dp"
-            android:src="@drawable/placeholder"/>
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleMarginEnd="64dp"
+            android:fitsSystemWindows="true">
+            <TextView
+                android:id="@+id/page_nme"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorAccent"
+                android:height="250dp"
+                android:text="@string/app_name"
+                app:layout_collapseMode="parallax" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:layout_collapseMode="pin" />
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+            <android.support.v4.widget.NestedScrollView
+                android:id="@+id/scroll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:background="@color/black"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-        <View
-            android:id="@+id/separator1_view"
-            style="@style/ViewSeparator"
-            android:layout_below="@+id/poster_iv"/>
+                    <ImageView
+                        android:id="@+id/poster_iv"
+                        android:layout_width="@dimen/poster_w185dp"
+                        android:layout_height="@dimen/poster_h277dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:contentDescription="@string/movie_image_content_description"
+                        android:layout_margin="@dimen/layout_margin_10dp"
+                        android:src="@drawable/placeholder"/>
 
-        <TextView
-            android:id="@+id/release_date_label_tv"
-            style="@style/DetailsTextView"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/separator1_view"
-            android:textStyle="bold"
-            android:text="@string/release_date_label_tv"/>
-        <TextView
-            android:id="@+id/release_date_tv"
-            style="@style/DetailsTextView"
-            android:layout_below="@+id/release_date_label_tv"
-            android:text="@string/fake_release_date_tv"/>
+                    <TextView
+                        android:id="@+id/release_date_label_tv"
+                        style="@style/DetailsTextView"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toRightOf="@+id/poster_iv"
+                        android:layout_toEndOf="@+id/poster_iv"
+                        android:textStyle="bold"
+                        android:text="@string/release_date_label_tv" />
+                    <TextView
+                        android:id="@+id/release_date_tv"
+                        style="@style/DetailsTextView"
+                        android:layout_below="@+id/release_date_label_tv"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toRightOf="@+id/poster_iv"
+                        android:layout_toEndOf="@+id/poster_iv"
+                        android:text="@string/fake_release_date_tv"/>
 
-        <TextView
-            android:id="@+id/vote_average_label_tv"
-            style="@style/DetailsTextView"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/separator1_view"
-            android:textStyle="bold"
-            android:text="@string/vote_average_label_tv"/>
-        <TextView
-            android:id="@+id/vote_average_tv"
-            style="@style/DetailsTextView"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/vote_average_label_tv"
-            android:text="@string/fake_vote_avarage_tv"/>
-        <View
-            android:id="@+id/separator2_view"
-            style="@style/ViewSeparator"
-            android:layout_below="@+id/vote_average_tv"/>
-        <TextView
-            android:id="@+id/overview_label_tv"
-            style="@style/DetailsTextView"
-            android:layout_below="@+id/separator2_view"
-            android:textStyle="bold"
-            android:text="@string/overview_label_tv" />
-        <TextView
-            android:id="@+id/overview_tv"
-            style="@style/DetailsTextView"
-            android:layout_below="@+id/overview_label_tv"
-            android:text="@string/fake_overview_tv"/>
+                    <TextView
+                        android:id="@+id/vote_average_label_tv"
+                        style="@style/DetailsTextView"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toRightOf="@+id/poster_iv"
+                        android:layout_toEndOf="@+id/poster_iv"
+                        android:layout_below="@+id/release_date_tv"
+                        android:textStyle="bold"
+                        android:text="@string/vote_average_label_tv"/>
+                    <TextView
+                        android:id="@+id/vote_average_tv"
+                        style="@style/DetailsTextView"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toRightOf="@+id/poster_iv"
+                        android:layout_toEndOf="@+id/poster_iv"
+                        android:layout_below="@+id/vote_average_label_tv"
+                        android:text="@string/fake_vote_avarage_tv"/>
 
-        <!-- Used by the AsyncTask for fetching the movies list. By default it is invisible-->
-        <ProgressBar
-            android:id="@+id/pb_loading_indicator"
-            android:layout_height="@dimen/progress_bar_size"
-            android:layout_width="@dimen/progress_bar_size"
-            android:layout_centerInParent="true"
-            android:visibility="invisible" />
+                    <View
+                        android:id="@+id/separator1_view"
+                        style="@style/ViewSeparator"
+                        android:layout_below="@+id/poster_iv"/>
 
-    </RelativeLayout>
-</ScrollView>
+                    <TextView
+                        android:id="@+id/overview_label_tv"
+                        style="@style/DetailsTextView"
+                        android:layout_below="@+id/separator1_view"
+                        android:textStyle="bold"
+                        android:text="@string/overview_label_tv" />
+                    <TextView
+                        android:id="@+id/overview_tv"
+                        style="@style/DetailsTextView"
+                        android:layout_below="@+id/overview_label_tv"
+                        android:text="@string/fake_overview_tv"/>
+
+                    <View
+                        android:id="@+id/separator2_view"
+                        style="@style/ViewSeparator"
+                        android:layout_below="@+id/overview_tv"/>
+
+                    <!-- Used by the AsyncTask for fetching the movies list. By default it is invisible-->
+                    <ProgressBar
+                        android:id="@+id/pb_loading_indicator"
+                        android:layout_height="@dimen/progress_bar_size"
+                        android:layout_width="@dimen/progress_bar_size"
+                        android:layout_centerInParent="true"
+                        android:visibility="invisible" />
+
+                </RelativeLayout>
+            </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

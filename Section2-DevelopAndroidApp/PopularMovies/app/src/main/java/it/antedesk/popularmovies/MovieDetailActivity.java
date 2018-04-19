@@ -2,6 +2,7 @@ package it.antedesk.popularmovies;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
@@ -17,7 +18,8 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import it.antedesk.popularmovies.model.Cast;
@@ -116,7 +118,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
                 .error(R.drawable.error)
                 .into(mPosterIv);
         mReleaseDateTv.setText(movie.getReleaseDate());
-        mRatingTv.setText(String.format("%s", movie.getVoteAvarage()));
+        mRatingTv.setText(String.format("%s / 10", movie.getVoteAvarage()));
         mPlotSynopsisTv.setText(movie.getOverview());
     }
 
