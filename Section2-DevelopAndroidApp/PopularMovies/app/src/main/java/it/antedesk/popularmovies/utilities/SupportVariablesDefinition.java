@@ -11,6 +11,7 @@ import it.antedesk.popularmovies.BuildConfig;
 public final class SupportVariablesDefinition {
     // the movie API key loaded from BuildConfig
     public static final String API_KEY = BuildConfig.API_KEY;
+    public static final String YOUTUBE_API_KEY = BuildConfig.YOUYUBE_API_KEY;
 
     public static final String SIZE_W185 = "w185";
     public static final String SIZE_W92 = "w92";

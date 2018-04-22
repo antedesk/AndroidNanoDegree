@@ -2,19 +2,26 @@ package it.antedesk.popularmovies;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
@@ -29,7 +36,8 @@ import it.antedesk.popularmovies.utilities.NetworkUtils;
 
 import static it.antedesk.popularmovies.utilities.SupportVariablesDefinition.*;
 
-public class MovieDetailActivity extends AppCompatActivity implements LoaderCallbacks<Movie> {
+public class MovieDetailActivity extends AppCompatActivity implements LoaderCallbacks<Movie>,
+        YouTubePlayer.OnInitializedListener  {
 
     // UI elements
     private ImageView mPosterIv;
@@ -38,9 +46,10 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     private TextView mPlotSynopsisTv;
 
     private ProgressBar mLoadingIndicator;
-
+    private YouTubePlayerSupportFragment mYuoTubePlayerFrag;
     // This number will uniquely identify our Loader and is chosen arbitrarily.
     private static final int MOVIES_LOADER = 22;
+    private static final int RECOVERY_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +63,9 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         mPlotSynopsisTv = findViewById(R.id.overview_tv);
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
+        mYuoTubePlayerFrag =
+                (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_fragment);
+        mYuoTubePlayerFrag.initialize(YOUTUBE_API_KEY, this);
         // Checking the internet connnection.
         if(!NetworkUtils.isOnline(this)){
             closeOnError();
@@ -94,7 +106,9 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
 
     // This method is used to populate the UI by using the given movie
     private void populateUI(Movie movie) {
-        setTitle(movie.getTitle());
+        //setTitle();
+        CollapsingToolbarLayout mCollapsingTB = findViewById(R.id.collapsing_toolbar);
+        mCollapsingTB.setTitle(movie.getTitle());
         String imageURL = IMAGE_URL+SIZE_W185+movie.getPosterPath();
         Picasso.with(this)
                 .load(imageURL)
@@ -111,7 +125,6 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         finish();
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
-
 
     @SuppressLint("StaticFieldLeak")
     @Override
@@ -175,4 +188,31 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
 
     @Override
     public void onLoaderReset(Loader<Movie> loader) { /*DO NOTHING*/ }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer,
+                                        boolean wasRestored) {
+        if (!wasRestored) {
+            youTubePlayer.cueVideo("");
+        }
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider,
+                                        YouTubeInitializationResult youTubeInitializationResult) {
+        if (youTubeInitializationResult.isUserRecoverableError()) {
+            youTubeInitializationResult.getErrorDialog(this, RECOVERY_REQUEST).show();
+        } else {
+            String error = String.format(getString(R.string.player_error), youTubeInitializationResult.toString());
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RECOVERY_REQUEST) {
+            getSupportFragmentManager().findFragmentById(R.id.youtube_fragment);
+        }
+    }
 }
