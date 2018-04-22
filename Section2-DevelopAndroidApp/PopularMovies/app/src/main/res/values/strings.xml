@@ -17,7 +17,10 @@
     <string name="overview_label_tv">Plot synopsis</string>
     <string name="fake_overview_tv">
         Determined to prove himself, Developer Antedesk, the last italian guy on AND, jumps at
-        the chance to crack his new app partnering with his wisey mentor Abhishek to create
+        the chance to crack his new app partnering with his wisey mentor to create
         a majesty app.
     </string>
+    <string name="player_error">Error initializing YouTube player: %s</string>
+    <string name="seek_to">Jump To</string>
+    <string name="seek_to_hint">Seconds</string>
 </resources>

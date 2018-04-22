@@ -2,7 +2,6 @@ package it.antedesk.popularmovies;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.icu.text.SimpleDateFormat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
@@ -15,11 +14,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
-import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 import it.antedesk.popularmovies.model.Cast;
@@ -43,13 +41,6 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
 
     // This number will uniquely identify our Loader and is chosen arbitrarily.
     private static final int MOVIES_LOADER = 22;
-    private static final String ID = "id";
-    private static final String TITLE = "title";
-    private static final String RELEASE_DATE = "releaseDate";
-    private static final String POSTER_PATH = "posterPath";
-    private static final String OVERVIEW = "overview";
-    private static final String VOTE_AVARAGE = "voteAvarage";
-    private static final String VOTE_COUNT = "voteCount";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,13 +79,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     private void loadAdditionalInfo(Movie movie) {
         // creating a new bundle and adding the current movie's info
         Bundle movieBundle = new Bundle();
-        movieBundle.putLong(ID, movie.getId());
-        movieBundle.putString(TITLE, movie.getTitle());
-        movieBundle.putString(RELEASE_DATE, movie.getReleaseDate());
-        movieBundle.putString(POSTER_PATH, movie.getPosterPath());
-        movieBundle.putDouble(VOTE_AVARAGE, movie.getVoteAvarage());
-        movieBundle.putString(OVERVIEW, movie.getOverview());
-        movieBundle.putLong(VOTE_COUNT, movie.getVoteCount());
+        movieBundle.putParcelable(MOVIE_TAG, movie);
         // initialize loaderManager
         LoaderManager loaderManager = getSupportLoaderManager();
         // Get the Loader by calling getLoader and passing the ID we specified
@@ -144,15 +129,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
 
             @Override
             public Movie loadInBackground() {
-                Movie movie = new Movie(
-                        args.getLong(ID),
-                        args.getString(TITLE),
-                        args.getString(RELEASE_DATE),
-                        args.getString(POSTER_PATH),
-                        args.getDouble(VOTE_AVARAGE),
-                        args.getString(OVERVIEW),
-                        args.getLong(VOTE_COUNT)
-                );
+                Movie movie = args.getParcelable(MOVIE_TAG);
 
                 URL trailersListRequestUrl = NetworkUtils.buildItemsListUrl(movie.getId(),VIDEOS,API_KEY);
                 URL reviewsListRequestUrl = NetworkUtils.buildItemsListUrl(movie.getId(),REVIEWS,API_KEY);
