@@ -2,23 +2,22 @@ package it.antedesk.popularmovies;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
-import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
@@ -51,6 +50,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     private static final int MOVIES_LOADER = 22;
     private static final int RECOVERY_REQUEST = 1;
 
+    private Movie movie;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,10 +63,9 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         mRatingTv = findViewById(R.id.vote_average_tv);
         mPlotSynopsisTv = findViewById(R.id.overview_tv);
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
-
         mYuoTubePlayerFrag =
                 (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_fragment);
-        mYuoTubePlayerFrag.initialize(YOUTUBE_API_KEY, this);
+
         // Checking the internet connnection.
         if(!NetworkUtils.isOnline(this)){
             closeOnError();
@@ -76,16 +76,28 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         if (intent == null) {
             closeOnError();
         }
-
         // retriving the movie form intent
-        Movie mMovie = intent.getParcelableExtra(MOVIE_TAG);
+        final Movie mMovie = intent.getParcelableExtra(MOVIE_TAG);
         if (mMovie == null) {
             closeOnError();
         }
 
-        // populate the UI
-        //populateUI(mMovie);
         loadAdditionalInfo(mMovie);
+
+        final CollapsingToolbarLayout mCollapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
+        AppBarLayout mAppBarLayout = findViewById(R.id.app_bar_layout);
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (verticalOffset == 0) {
+                    findViewById(R.id.movie_toolbar).setVisibility(View.INVISIBLE);
+                    mCollapsingToolbarLayout.setTitle("");
+                } else if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
+                    findViewById(R.id.movie_toolbar).setVisibility(View.VISIBLE);
+                    mCollapsingToolbarLayout.setTitle(mMovie.getTitle());
+                }
+            }
+        });
     }
 
     private void loadAdditionalInfo(Movie movie) {
@@ -106,9 +118,6 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
 
     // This method is used to populate the UI by using the given movie
     private void populateUI(Movie movie) {
-        //setTitle();
-        CollapsingToolbarLayout mCollapsingTB = findViewById(R.id.collapsing_toolbar);
-        mCollapsingTB.setTitle(movie.getTitle());
         String imageURL = IMAGE_URL+SIZE_W185+movie.getPosterPath();
         Picasso.with(this)
                 .load(imageURL)
@@ -125,6 +134,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         finish();
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
+
+
 
     @SuppressLint("StaticFieldLeak")
     @Override
@@ -180,10 +191,10 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         // hiding the loading indicator
         mLoadingIndicator.setVisibility(View.INVISIBLE);
        if (data != null) {
-            showMoviesDataView(data);
-        }  /*else {
-            showErrorMessage();
-        }*/
+           movie = data;
+           showMoviesDataView(data);
+           mYuoTubePlayerFrag.initialize(YOUTUBE_API_KEY, this);
+        }
     }
 
     @Override
@@ -193,7 +204,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer,
                                         boolean wasRestored) {
         if (!wasRestored) {
-            youTubePlayer.cueVideo("");
+            if(movie!=null)
+                youTubePlayer.cueVideo(movie.getTrailers().get(0).getKey());
         }
     }
 

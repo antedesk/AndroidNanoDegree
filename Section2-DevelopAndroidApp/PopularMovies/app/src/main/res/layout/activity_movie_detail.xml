@@ -35,7 +35,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="parallax"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:title="@string/fake_title_tv" />
+                android:visibility="gone"/>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
             <android.support.v4.widget.NestedScrollView
@@ -53,8 +53,6 @@
                         android:id="@+id/poster_iv"
                         android:layout_width="@dimen/poster_w185dp"
                         android:layout_height="@dimen/poster_h277dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
                         android:contentDescription="@string/movie_image_content_description"
                         android:layout_margin="@dimen/layout_margin_10dp"
                         android:src="@drawable/placeholder"/>
@@ -62,8 +60,6 @@
                     <TextView
                         android:id="@+id/release_date_label_tv"
                         style="@style/DetailsTextView"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
                         android:layout_toRightOf="@+id/poster_iv"
                         android:layout_toEndOf="@+id/poster_iv"
                         android:textStyle="bold"
@@ -72,8 +68,6 @@
                         android:id="@+id/release_date_tv"
                         style="@style/DetailsTextView"
                         android:layout_below="@+id/release_date_label_tv"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
                         android:layout_toRightOf="@+id/poster_iv"
                         android:layout_toEndOf="@+id/poster_iv"
                         android:text="@string/fake_release_date_tv"/>
@@ -81,8 +75,6 @@
                     <TextView
                         android:id="@+id/vote_average_label_tv"
                         style="@style/DetailsTextView"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
                         android:layout_toRightOf="@+id/poster_iv"
                         android:layout_toEndOf="@+id/poster_iv"
                         android:layout_below="@+id/release_date_tv"
@@ -91,8 +83,6 @@
                     <TextView
                         android:id="@+id/vote_average_tv"
                         style="@style/DetailsTextView"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
                         android:layout_toRightOf="@+id/poster_iv"
                         android:layout_toEndOf="@+id/poster_iv"
                         android:layout_below="@+id/vote_average_label_tv"
