@@ -138,7 +138,7 @@ public class JsonUtils {
                 // getting the movie's attributes
                 long id = reviewJSONObj.optLong(JSON_ID_KEY, 0);
                 String author = reviewJSONObj.optString(JSON_AUTHOR_KEY);
-                String content = reviewJSONObj.optString(JSON_RELEASE_DATE_KEY);
+                String content = reviewJSONObj.optString(JSON_CONTENT_KEY);
 
                 // creating the movie obj
                 Review review = new  Review(id, author, content);

@@ -82,7 +82,6 @@ public class MovieViewAdapter extends RecyclerView.Adapter<MovieViewAdapter.Movi
             super(itemView);
             mPosterIV = itemView.findViewById(R.id.grid_poster_iv);
             itemView.setOnClickListener(this);
-            itemView.setOnClickListener(this);
         }
 
         @Override

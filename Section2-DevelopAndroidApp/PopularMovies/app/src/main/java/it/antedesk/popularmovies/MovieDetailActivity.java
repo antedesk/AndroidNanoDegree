@@ -1,6 +1,7 @@
 package it.antedesk.popularmovies;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -11,7 +12,12 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,6 +32,7 @@ import com.squareup.picasso.Picasso;
 import java.net.URL;
 import java.util.List;
 
+import it.antedesk.popularmovies.adapter.ReviewViewAdapter;
 import it.antedesk.popularmovies.model.Cast;
 import it.antedesk.popularmovies.model.Movie;
 import it.antedesk.popularmovies.model.Review;
@@ -36,13 +43,16 @@ import it.antedesk.popularmovies.utilities.NetworkUtils;
 import static it.antedesk.popularmovies.utilities.SupportVariablesDefinition.*;
 
 public class MovieDetailActivity extends AppCompatActivity implements LoaderCallbacks<Movie>,
-        YouTubePlayer.OnInitializedListener  {
+        ReviewViewAdapter.ReviewViewAdapterOnClickHandler,
+        YouTubePlayer.OnInitializedListener {
 
     // UI elements
     private ImageView mPosterIv;
     private TextView mReleaseDateTv;
     private TextView mRatingTv;
     private TextView mPlotSynopsisTv;
+    private RecyclerView mReviewsRecyclerView;
+    private ReviewViewAdapter mReviewViewAdapter;
 
     private ProgressBar mLoadingIndicator;
     private YouTubePlayerSupportFragment mYuoTubePlayerFrag;
@@ -65,6 +75,15 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
         mYuoTubePlayerFrag =
                 (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_fragment);
+        mReviewsRecyclerView = findViewById(R.id.reviews_list_rv);
+        // creating a LinearLayoutManager
+        LinearLayoutManager layoutManager
+                = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        // setting the layoutManager on mRecyclerView
+        mReviewsRecyclerView.setLayoutManager(layoutManager);
+        mReviewsRecyclerView.setHasFixedSize(true);
+
+        mReviewViewAdapter = new ReviewViewAdapter(this);
 
         // Checking the internet connnection.
         if(!NetworkUtils.isOnline(this)){
@@ -184,6 +203,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
 
     private void showMoviesDataView(Movie movie){
         populateUI(movie);
+        mReviewsRecyclerView.setAdapter(mReviewViewAdapter);
+        mReviewViewAdapter.setReviewsData(movie.getReviews());
     }
 
     @Override
@@ -226,5 +247,18 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         if (requestCode == RECOVERY_REQUEST) {
             getSupportFragmentManager().findFragmentById(R.id.youtube_fragment);
         }
+    }
+
+    @Override
+    public void onClick(Review selectedReview) {
+        Log.d(MOVIE_TAG, selectedReview.toString());
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_review);
+        TextView reviewerName = dialog.findViewById(R.id.reviewer_name_tv);
+        TextView reviewContent = dialog.findViewById(R.id.review_content_tv);
+        reviewerName.setText(selectedReview.getAuthor());
+        reviewContent.setText(selectedReview.getContent());
+        dialog.show();
     }
 }

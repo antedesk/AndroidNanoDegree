@@ -3,6 +3,7 @@
     <dimen name="connection_error_iv">150dp</dimen>
     <dimen name="connection_error_tv_layout_margin">10dp</dimen>
     <dimen name="basic_tv_size">20sp</dimen>
+    <dimen name="cardview_tv_size">15sp</dimen>
     <dimen name="progress_bar_size">42dp</dimen>
     <dimen name="detail_iv_hight">200dp</dimen>
     <dimen name="line_separator_thickness">4dp</dimen>
@@ -15,4 +16,5 @@
     <dimen name="poster_h277dp">277dp</dimen>
     <dimen name="image_frame">2dp</dimen>
     <dimen name="error_background_radius">22dp</dimen>
+    <dimen name="layout_400dp">400dp</dimen>
 </resources>

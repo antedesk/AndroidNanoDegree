@@ -48,7 +48,6 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
                     <ImageView
                         android:id="@+id/poster_iv"
                         android:layout_width="@dimen/poster_w185dp"
@@ -109,10 +108,12 @@
                         android:id="@+id/separator2_view"
                         style="@style/ViewSeparator"
                         android:layout_below="@+id/overview_tv"/>
-                    <TextView
-                        style="@style/DetailsTextView"
-                        android:layout_below="@+id/separator2_view"
-                        android:text="@string/fake_overview_tv"/>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/reviews_list_rv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/separator2_view"/>
 
                     <!-- Used by the AsyncTask for fetching the movies list. By default it is invisible-->
                     <ProgressBar
