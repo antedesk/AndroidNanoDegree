@@ -24,4 +24,5 @@
     <string name="seek_to">Jump To</string>
     <string name="seek_to_hint">Seconds</string>
     <string name="preview"> (tap to continue)</string>
+    <string name="youtube_icon_play">youtube icon play</string>
 </resources>

@@ -5,14 +5,13 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -30,9 +28,12 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import it.antedesk.popularmovies.adapter.ReviewViewAdapter;
+import it.antedesk.popularmovies.adapter.TrailerViewAdapter;
 import it.antedesk.popularmovies.model.Cast;
 import it.antedesk.popularmovies.model.Movie;
 import it.antedesk.popularmovies.model.Review;
@@ -44,6 +45,7 @@ import static it.antedesk.popularmovies.utilities.SupportVariablesDefinition.*;
 
 public class MovieDetailActivity extends AppCompatActivity implements LoaderCallbacks<Movie>,
         ReviewViewAdapter.ReviewViewAdapterOnClickHandler,
+        TrailerViewAdapter.TrailerViewAdapterOnClickHandler,
         YouTubePlayer.OnInitializedListener {
 
     // UI elements
@@ -53,9 +55,13 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     private TextView mPlotSynopsisTv;
     private RecyclerView mReviewsRecyclerView;
     private ReviewViewAdapter mReviewViewAdapter;
+    private RecyclerView mTrailerRecyclerView;
+    private TrailerViewAdapter mTrailerViewAdapter;
 
     private ProgressBar mLoadingIndicator;
     private YouTubePlayerSupportFragment mYuoTubePlayerFrag;
+    private YouTubePlayer mYouTubePlayer;
+
     // This number will uniquely identify our Loader and is chosen arbitrarily.
     private static final int MOVIES_LOADER = 22;
     private static final int RECOVERY_REQUEST = 1;
@@ -75,6 +81,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
         mYuoTubePlayerFrag =
                 (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_fragment);
+
         mReviewsRecyclerView = findViewById(R.id.reviews_list_rv);
         // creating a LinearLayoutManager
         LinearLayoutManager layoutManager
@@ -82,8 +89,16 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         // setting the layoutManager on mRecyclerView
         mReviewsRecyclerView.setLayoutManager(layoutManager);
         mReviewsRecyclerView.setHasFixedSize(true);
-
         mReviewViewAdapter = new ReviewViewAdapter(this);
+
+        mTrailerRecyclerView = findViewById(R.id.trailers_list_rv);
+        // creating a LinearLayoutManager
+        LinearLayoutManager trailerLayoutManager
+                = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        // setting the layoutManager on mRecyclerView
+        mTrailerRecyclerView.setLayoutManager(trailerLayoutManager);
+        mTrailerRecyclerView.setHasFixedSize(true);
+        mTrailerViewAdapter = new TrailerViewAdapter(this);
 
         // Checking the internet connnection.
         if(!NetworkUtils.isOnline(this)){
@@ -186,16 +201,21 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
                             .getResponseFromHttpUrl(castsListRequestUrl);
 
                     List<Trailer> trailers = JsonUtils.getTrailersList(jsonTrailersResponse);
+                    // sort the list of trailer by desc Type. This allows app to display the latest trailer
+                    Collections.sort(trailers, new Comparator<Trailer>(){
+                        public int compare(Trailer obj1, Trailer obj2) {
+                            return obj2.getType().compareToIgnoreCase(obj1.getType());
+                        }
+                    });
+
                     List<Review> reviews = JsonUtils.getReviewsList(jsonReviewsResponse);
                     List<Cast> casts = JsonUtils.getCastsList(jsonCastsResponse);
                     movie.setTrailers(trailers);
                     movie.setReviews(reviews);
                     movie.setCasts(casts);
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 return movie;
             }
         };
@@ -205,6 +225,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         populateUI(movie);
         mReviewsRecyclerView.setAdapter(mReviewViewAdapter);
         mReviewViewAdapter.setReviewsData(movie.getReviews());
+        mTrailerRecyclerView.setAdapter(mTrailerViewAdapter);
+        mTrailerViewAdapter.setTrailersData(movie.getTrailers());
     }
 
     @Override
@@ -225,6 +247,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer,
                                         boolean wasRestored) {
         if (!wasRestored) {
+            mYouTubePlayer = youTubePlayer;
             if(movie!=null)
                 youTubePlayer.cueVideo(movie.getTrailers().get(0).getKey());
         }
@@ -260,5 +283,18 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         reviewerName.setText(selectedReview.getAuthor());
         reviewContent.setText(selectedReview.getContent());
         dialog.show();
+    }
+
+    @Override
+    public void onClick(Trailer selectedTrailer) {
+        Log.d(MOVIE_TAG, selectedTrailer.toString());
+        if (mYuoTubePlayerFrag != null && mYouTubePlayer != null) {
+            //load the selected video
+            mYouTubePlayer.cueVideo(selectedTrailer.getKey());
+            NestedScrollView scroll = findViewById(R.id.scroll);
+            scroll.scrollTo(0, 0);;
+            AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
+            appBarLayout.setExpanded(true);
+        }
     }
 }

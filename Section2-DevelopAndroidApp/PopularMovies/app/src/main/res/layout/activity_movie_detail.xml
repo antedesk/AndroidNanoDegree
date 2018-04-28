@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -48,6 +49,12 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/short_info"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
                     <ImageView
                         android:id="@+id/poster_iv"
                         android:layout_width="@dimen/poster_w185dp"
@@ -86,11 +93,11 @@
                         android:layout_toEndOf="@+id/poster_iv"
                         android:layout_below="@+id/vote_average_label_tv"
                         android:text="@string/fake_vote_avarage_tv"/>
-
+                </RelativeLayout>
                     <View
                         android:id="@+id/separator1_view"
                         style="@style/ViewSeparator"
-                        android:layout_below="@+id/poster_iv"/>
+                        android:layout_below="@+id/short_info"/>
 
                     <TextView
                         android:id="@+id/overview_label_tv"
@@ -114,6 +121,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/separator2_view"/>
+
+                    <View
+                        android:id="@+id/separator3_view"
+                        style="@style/ViewSeparator"
+                        android:layout_below="@+id/reviews_list_rv"/>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/trailers_list_rv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/separator3_view"/>
 
                     <!-- Used by the AsyncTask for fetching the movies list. By default it is invisible-->
                     <ProgressBar

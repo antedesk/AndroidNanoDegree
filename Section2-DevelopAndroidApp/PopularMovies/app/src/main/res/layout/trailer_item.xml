@@ -1,0 +1,19 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/trailer_cv"
+    style="@style/CardViewTrailerMovieDetails"
+    android:clickable="true"
+    android:foreground="@drawable/image_ripple"
+    card_view:cardBackgroundColor="@color/grayWhite"
+    card_view:cardPreventCornerOverlap="true"
+    card_view:cardUseCompatPadding="true"
+    android:focusable="true">
+
+    <com.google.android.youtube.player.YouTubeThumbnailView
+        android:id="@+id/youtube_thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_130dp"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center"
+        android:visibility="visible"/>
+</android.support.v7.widget.CardView>

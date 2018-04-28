@@ -32,20 +32,20 @@
     </style>
 
     <style name="CardViewMovieDetails" parent="CardView">
-        <item name="android:layout_width">250dp</item>
-        <item name="android:layout_height">200dp</item>
         <item name="android:layout_margin">6dp</item>
         <item name="cardElevation">5dp</item>
         <item name="cardCornerRadius">5dp</item>
         <item name="cardUseCompatPadding">true</item>
         <item name="android:background">@color/grayWhite</item>
     </style>
-    <style name="MyRatingBar" parent="Widget.AppCompat.RatingBar.Indicator">
-        <item name="colorControlNormal">@color/white</item>
-        <item name="colorControlActivated">@color/red_netflix</item>
-    </style>
-    <style name="AppThemeRatingBar" parent="Theme.AppCompat">
-        <item name="ratingBarStyle">@style/MyRatingBar</item>
+
+    <style name="CardViewReviewMovieDetails" parent="CardViewMovieDetails">
+        <item name="android:layout_width">250dp</item>
+        <item name="android:layout_height">200dp</item>
     </style>
 
+    <style name="CardViewTrailerMovieDetails" parent="CardViewMovieDetails">
+        <item name="android:layout_width">250dp</item>
+        <item name="android:layout_height">160dp</item>
+    </style>
 </resources>
