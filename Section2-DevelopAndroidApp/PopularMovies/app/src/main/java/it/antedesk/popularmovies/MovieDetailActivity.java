@@ -191,14 +191,14 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
 
                 URL trailersListRequestUrl = NetworkUtils.buildItemsListUrl(movie.getId(),VIDEOS,API_KEY);
                 URL reviewsListRequestUrl = NetworkUtils.buildItemsListUrl(movie.getId(),REVIEWS,API_KEY);
-                URL castsListRequestUrl = NetworkUtils.buildItemsListUrl(movie.getId(),CASTS,API_KEY);
+                //URL castsListRequestUrl = NetworkUtils.buildItemsListUrl(movie.getId(),CASTS,API_KEY);
                 try {
                     String jsonTrailersResponse = NetworkUtils
                             .getResponseFromHttpUrl(trailersListRequestUrl);
                     String jsonReviewsResponse = NetworkUtils
                             .getResponseFromHttpUrl(reviewsListRequestUrl);
-                    String jsonCastsResponse = NetworkUtils
-                            .getResponseFromHttpUrl(castsListRequestUrl);
+                    //String jsonCastsResponse = NetworkUtils
+                    //        .getResponseFromHttpUrl(castsListRequestUrl);
 
                     List<Trailer> trailers = JsonUtils.getTrailersList(jsonTrailersResponse);
                     // sort the list of trailer by desc Type. This allows app to display the latest trailer
@@ -209,10 +209,10 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
                     });
 
                     List<Review> reviews = JsonUtils.getReviewsList(jsonReviewsResponse);
-                    List<Cast> casts = JsonUtils.getCastsList(jsonCastsResponse);
+                    //List<Cast> casts = JsonUtils.getCastsList(jsonCastsResponse);
                     movie.setTrailers(trailers);
                     movie.setReviews(reviews);
-                    movie.setCasts(casts);
+                    //movie.setCasts(casts);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
