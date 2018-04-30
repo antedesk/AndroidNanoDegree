@@ -2,19 +2,22 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="@dimen/layout_400dp">
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="@dimen/layout_dialog">
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/layout_margin_10dp"
+        android:orientation="vertical">
         <TextView
             android:id="@+id/reviewer_name_tv"
             style="@style/ReviewTextView"
-            android:text="@string/fake_title_tv"/>
+            android:text="@string/fake_title_tv"
+            android:textStyle="bold"/>
+        <View style="@style/ViewSeparator"/>
         <TextView
             android:id="@+id/review_content_tv"
             style="@style/ReviewTextView"
-            android:layout_below="@+id/reviewer_name_tv"
             android:text="@string/fake_overview_tv"/>
-    </RelativeLayout>
+    </LinearLayout>
 </ScrollView>

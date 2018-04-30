@@ -16,6 +16,6 @@
     <dimen name="poster_h277dp">277dp</dimen>
     <dimen name="image_frame">2dp</dimen>
     <dimen name="error_background_radius">22dp</dimen>
-    <dimen name="layout_400dp">400dp</dimen>
+    <dimen name="layout_dialog">300dp</dimen>
     <dimen name="layout_130dp">130dp</dimen>
 </resources>
