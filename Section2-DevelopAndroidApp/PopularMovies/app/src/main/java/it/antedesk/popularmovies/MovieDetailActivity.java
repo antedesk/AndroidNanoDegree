@@ -32,9 +32,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import it.antedesk.popularmovies.adapter.ReviewViewAdapter;
 import it.antedesk.popularmovies.adapter.TrailerViewAdapter;
-import it.antedesk.popularmovies.model.Cast;
 import it.antedesk.popularmovies.model.Movie;
 import it.antedesk.popularmovies.model.Review;
 import it.antedesk.popularmovies.model.Trailer;
@@ -49,16 +50,16 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         YouTubePlayer.OnInitializedListener {
 
     // UI elements
-    private ImageView mPosterIv;
-    private TextView mReleaseDateTv;
-    private TextView mRatingTv;
-    private TextView mPlotSynopsisTv;
-    private RecyclerView mReviewsRecyclerView;
+    @BindView(R.id.poster_iv) ImageView mPosterIv;
+    @BindView(R.id.release_date_tv) TextView mReleaseDateTv;
+    @BindView(R.id.vote_average_tv) TextView mRatingTv;
+    @BindView(R.id.overview_tv) TextView mPlotSynopsisTv;
+    @BindView(R.id.reviews_list_rv) RecyclerView mReviewsRecyclerView;
     private ReviewViewAdapter mReviewViewAdapter;
-    private RecyclerView mTrailerRecyclerView;
+    @BindView(R.id.trailers_list_rv) RecyclerView mTrailerRecyclerView;
     private TrailerViewAdapter mTrailerViewAdapter;
 
-    private ProgressBar mLoadingIndicator;
+    @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
     private YouTubePlayerSupportFragment mYuoTubePlayerFrag;
     private YouTubePlayer mYouTubePlayer;
 
@@ -72,18 +73,11 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
-
+        ButterKnife.bind(this);
         // finding UI elements
-        mPosterIv = findViewById(R.id.poster_iv);
-        mReleaseDateTv = findViewById(R.id.release_date_tv);
-        mRatingTv = findViewById(R.id.vote_average_tv);
-        mPlotSynopsisTv = findViewById(R.id.overview_tv);
-        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
         mYuoTubePlayerFrag =
                 (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_fragment);
 
-        mReviewsRecyclerView = findViewById(R.id.reviews_list_rv);
-        // creating a LinearLayoutManager
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         // setting the layoutManager on mRecyclerView
@@ -91,14 +85,15 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         mReviewsRecyclerView.setHasFixedSize(true);
         mReviewViewAdapter = new ReviewViewAdapter(this);
 
-        mTrailerRecyclerView = findViewById(R.id.trailers_list_rv);
-        // creating a LinearLayoutManager
         LinearLayoutManager trailerLayoutManager
                 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         // setting the layoutManager on mRecyclerView
         mTrailerRecyclerView.setLayoutManager(trailerLayoutManager);
         mTrailerRecyclerView.setHasFixedSize(true);
         mTrailerViewAdapter = new TrailerViewAdapter(this);
+
+        mReviewsRecyclerView.setAdapter(mReviewViewAdapter);
+        mTrailerRecyclerView.setAdapter(mTrailerViewAdapter);
 
         // Checking the internet connnection.
         if(!NetworkUtils.isOnline(this)){
@@ -223,9 +218,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
 
     private void showMoviesDataView(Movie movie){
         populateUI(movie);
-        mReviewsRecyclerView.setAdapter(mReviewViewAdapter);
         mReviewViewAdapter.setReviewsData(movie.getReviews());
-        mTrailerRecyclerView.setAdapter(mTrailerViewAdapter);
         mTrailerViewAdapter.setTrailersData(movie.getTrailers());
     }
 

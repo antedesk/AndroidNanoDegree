@@ -9,11 +9,14 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import it.antedesk.popularmovies.R;
 import it.antedesk.popularmovies.model.Review;
 
 /**
  * Created by Antedesk on 24/04/2018.
+ *
  */
 
 public class ReviewViewAdapter extends RecyclerView.Adapter<ReviewViewAdapter.ReviewAdapterViewHolder> {
@@ -53,20 +56,19 @@ public class ReviewViewAdapter extends RecyclerView.Adapter<ReviewViewAdapter.Re
 
     @Override
     public int getItemCount() {
-        if (reviewsList.isEmpty()) return 0;
+        if (reviewsList ==null || reviewsList.isEmpty()) return 0;
         return reviewsList.size();
     }
 
     public class ReviewAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        final TextView mReviewerAuthor;
-        final TextView mReviewContent;
+        @BindView(R.id.reviewer_name_tv) TextView mReviewerAuthor;
+        @BindView(R.id.review_content_tv) TextView mReviewContent;
 
         // Using view.findViewById to get a reference to the TextViews
         public ReviewAdapterViewHolder(View itemView) {
             super(itemView);
-            mReviewerAuthor = itemView.findViewById(R.id.reviewer_name_tv);
-            mReviewContent = itemView.findViewById(R.id.review_content_tv);
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
 

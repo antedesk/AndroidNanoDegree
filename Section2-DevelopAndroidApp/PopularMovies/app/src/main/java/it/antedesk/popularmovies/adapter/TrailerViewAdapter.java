@@ -1,15 +1,12 @@
 package it.antedesk.popularmovies.adapter;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
@@ -17,6 +14,8 @@ import com.google.android.youtube.player.YouTubeThumbnailView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import it.antedesk.popularmovies.R;
 import it.antedesk.popularmovies.model.Trailer;
 
@@ -54,11 +53,6 @@ public class TrailerViewAdapter extends RecyclerView.Adapter<TrailerViewAdapter.
     @Override
     public void onBindViewHolder(TrailerAdapterViewHolder holder, int position) {
         final int currentPosition = position;
-//        if (selectedPosition == currentPosition) {
-//            holder.mTrailerCardView.setCardBackgroundColor(ContextCompat.getColor(parentContex, R.color.red_netflix));
-//        } else {
-//            holder.mTrailerCardView.setCardBackgroundColor(ContextCompat.getColor(parentContex, R.color.grayWhite));
-//        }
 
         holder.mYouTubeThumbnailView.initialize(YOUTUBE_API_KEY, new YouTubeThumbnailView.OnInitializedListener() {
             @Override
@@ -89,19 +83,18 @@ public class TrailerViewAdapter extends RecyclerView.Adapter<TrailerViewAdapter.
 
     @Override
     public int getItemCount() {
-        if (trailersList.isEmpty()) return 0;
+        if (trailersList== null || trailersList.isEmpty()) return 0;
         return trailersList.size();
     }
 
 
     public class TrailerAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public YouTubeThumbnailView mYouTubeThumbnailView;
-        public CardView mTrailerCardView;
+        @BindView(R.id.youtube_thumbnail) YouTubeThumbnailView mYouTubeThumbnailView;
+        @BindView(R.id.trailer_cv) CardView mTrailerCardView;
 
         public TrailerAdapterViewHolder(View itemView) {
             super(itemView);
-            mTrailerCardView = itemView.findViewById(R.id.trailer_cv);
-            mYouTubeThumbnailView = itemView.findViewById(R.id.youtube_thumbnail);
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
 
