@@ -93,6 +93,16 @@
                         android:layout_toEndOf="@+id/poster_iv"
                         android:layout_below="@+id/vote_average_label_tv"
                         android:text="@string/fake_vote_avarage_tv"/>
+                    <ImageView
+                        android:id="@+id/favorite_iv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/poster_iv"
+                        android:layout_toEndOf="@+id/poster_iv"
+                        android:layout_below="@+id/vote_average_tv"
+                        android:src="@mipmap/star_empty"
+                        android:contentDescription="@string/credit_empty_star"
+                        android:onClick="addRemoveFavorite"/>
                 </RelativeLayout>
                     <View
                         android:id="@+id/separator1_view"

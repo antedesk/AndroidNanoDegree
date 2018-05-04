@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="it.antedesk.popularmovies">
 
-    <!-- Add internet permission to connect the app to internet and check its state-->
+    <!-- Add internet permission to connect the app to internet and check its state -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -20,10 +20,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- I implemented proper "up" navigation via app bar on DetailActivity
-            as suggested in the SandwichClub project-->
-        <activity
-            android:name=".MovieDetailActivity" />
+        <activity android:name=".MovieDetailActivity" />
+        <provider
+            android:name="it.antedesk.popularmovies.data.MovieContentProvider"
+            android:authorities="it.antedesk.popularmovies"
+            android:exported="false"/>
     </application>
 
 </manifest>

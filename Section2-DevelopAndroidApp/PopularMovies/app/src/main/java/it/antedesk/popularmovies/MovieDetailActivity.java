@@ -2,7 +2,11 @@ package it.antedesk.popularmovies;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.LoaderManager;
@@ -17,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,6 +41,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.antedesk.popularmovies.adapter.ReviewViewAdapter;
 import it.antedesk.popularmovies.adapter.TrailerViewAdapter;
+import it.antedesk.popularmovies.data.MovieContract.MovieEntry;
+import it.antedesk.popularmovies.data.MovieDbHelper;
 import it.antedesk.popularmovies.model.Movie;
 import it.antedesk.popularmovies.model.Review;
 import it.antedesk.popularmovies.model.Trailer;
@@ -54,6 +61,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     @BindView(R.id.release_date_tv) TextView mReleaseDateTv;
     @BindView(R.id.vote_average_tv) TextView mRatingTv;
     @BindView(R.id.overview_tv) TextView mPlotSynopsisTv;
+    @BindView(R.id.favorite_iv) ImageView mFavoriteIv;
+
     @BindView(R.id.reviews_list_rv) RecyclerView mReviewsRecyclerView;
     private ReviewViewAdapter mReviewViewAdapter;
     @BindView(R.id.trailers_list_rv) RecyclerView mTrailerRecyclerView;
@@ -67,13 +76,21 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     private static final int MOVIES_LOADER = 22;
     private static final int RECOVERY_REQUEST = 1;
 
+    private boolean isFavorite = false;
+
     private Movie movie;
+
+    private SQLiteDatabase mFavMovieDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
         ButterKnife.bind(this);
+
+        MovieDbHelper dbHelper = new MovieDbHelper(this);
+        mFavMovieDb = dbHelper.getWritableDatabase();
+
         // finding UI elements
         mYuoTubePlayerFrag =
                 (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_fragment);
@@ -154,6 +171,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.error)
                 .into(mPosterIv);
+        if(isFavorite) mFavoriteIv.setImageResource(R.mipmap.star);
         mReleaseDateTv.setText(movie.getReleaseDate());
         mRatingTv.setText(String.format("%s / 10", movie.getVoteAvarage()));
         mPlotSynopsisTv.setText(movie.getOverview());
@@ -208,6 +226,11 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
                     movie.setTrailers(trailers);
                     movie.setReviews(reviews);
                     //movie.setCasts(casts);
+
+                    //check if the current movie is a favorite one or not
+                    isFavorite = isFavoriteMovie(movie.getId());
+                    Log.d("isFavorite", ""+isFavorite);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -226,10 +249,10 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     public void onLoadFinished(Loader<Movie> loader, Movie data) {
         // hiding the loading indicator
         mLoadingIndicator.setVisibility(View.INVISIBLE);
-       if (data != null) {
-           movie = data;
-           showMoviesDataView(data);
-           mYuoTubePlayerFrag.initialize(YOUTUBE_API_KEY, this);
+        if (data != null) {
+            movie = data;
+            showMoviesDataView(data);
+            mYuoTubePlayerFrag.initialize(YOUTUBE_API_KEY, this);
         }
     }
 
@@ -288,6 +311,74 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
             scroll.scrollTo(0, 0);;
             AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
             appBarLayout.setExpanded(true);
+        }
+    }
+
+    private boolean addFavoriteMovie(Movie movie){
+        boolean added = true;
+        ContentValues cv =  new ContentValues();
+        cv.put(MovieEntry.COLUMN_MOVIE_ID, movie.getId());
+        cv.put(MovieEntry.COLUMN_TITLE, movie.getTitle());
+        cv.put(MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
+        cv.put(MovieEntry.COLUMN_POSTER_PATH, movie.getPosterPath());
+        cv.put(MovieEntry.COLUMN_VOTE_AVARAGE, movie.getVoteAvarage());
+        cv.put(MovieEntry.COLUMN_OVERVIEW, movie.getOverview());
+        cv.put(MovieEntry.COLUMN_VOTE_COUNT, movie.getVoteCount());
+
+        Uri uri = getContentResolver().insert(MovieEntry.CONTENT_URI, cv);
+        if(uri == null) {
+            added = false;
+            Toast.makeText(getBaseContext(),"Error: movie not added to favorites", Toast.LENGTH_LONG).show();
+        }
+        Log.d("ContentProvider", "added "+added);
+        return added;
+    }
+
+    private boolean removeFavoriteMovie(long movieId){
+        boolean removed = true;
+        Uri uri = MovieEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(movieId)).build();
+        int moviesDeleted = getContentResolver().delete(uri, null, null);
+        if(moviesDeleted < 0) {
+            removed = false;
+            Toast.makeText(getBaseContext(), "Error: movie not removed from favorites", Toast.LENGTH_LONG).show();
+        }
+        Log.d("ContentProvider", "removed "+removed);
+        return removed;
+    }
+
+    private boolean isFavoriteMovie(long movieId){
+        boolean isFavorite = false;
+
+        Cursor cursor = getContentResolver().query(
+                MovieEntry.CONTENT_URI,
+                null,
+                MovieEntry.COLUMN_MOVIE_ID+" = ?",
+                new String[]{String.valueOf(movieId)},
+                null
+        );
+        if(cursor != null && cursor.getCount() >= 1 && cursor.moveToFirst()) {
+            isFavorite = true;
+            cursor.close();
+        }
+        Log.d("ContentProvider", "isFavorite "+isFavorite);
+        return isFavorite;
+    }
+
+    /**
+     * allows user to add/remove the current movie to/from db.
+     *
+     * @param view
+     */
+    public void addRemoveFavorite(View view) {
+        view.startAnimation(AnimationUtils.loadAnimation(this, R.anim.image_click));
+        if(isFavorite){
+            mFavoriteIv.setImageResource(R.mipmap.star_empty);
+            if(removeFavoriteMovie(movie.getId()))
+                isFavorite=false;
+        } else {
+            mFavoriteIv.setImageResource(R.mipmap.star);
+            if(addFavoriteMovie(movie))
+                isFavorite=true;
         }
     }
 }

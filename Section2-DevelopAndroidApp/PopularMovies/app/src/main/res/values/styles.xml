@@ -15,6 +15,7 @@
         <item name="android:layout_margin">@dimen/layout_margin_5dp</item>
         <item name="android:textSize">@dimen/basic_tv_size</item>
     </style>
+
     <style name="ReviewTextView" parent="@android:style/TextAppearance">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -22,14 +23,15 @@
         <item name="android:layout_margin">@dimen/layout_margin_5dp</item>
         <item name="android:textSize">@dimen/cardview_tv_size</item>
     </style>
+
     <style name="ViewSeparator" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">@dimen/line_separator_thickness</item>
         <item name="android:layout_margin">@dimen/layout_margin_10dp</item>
         <item name="android:background">@color/red_netflix</item>
     </style>
-    <style name="RatingBarPM" parent="Widget.AppCompat.RatingBar">
-    </style>
+
+    <style name="RatingBarPM" parent="Widget.AppCompat.RatingBar"></style>
 
     <style name="CardViewMovieDetails" parent="CardView">
         <item name="android:layout_margin">6dp</item>
@@ -48,4 +50,13 @@
         <item name="android:layout_width">250dp</item>
         <item name="android:layout_height">160dp</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
