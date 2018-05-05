@@ -1,10 +1,5 @@
 <resources>
     <string name="app_name">PopularMovies</string>
-    <string name="sort_criteria">Sorting for: </string>
-    <string-array name="criteria_array">
-        <item>popular</item>
-        <item>top_rated</item>
-    </string-array>
     <string name="grid_poster_cd">movie poster</string>
     <string name="detail_error_message">Ops! You are not online.\nPlease, check your connectivity.\nYou can access only some info.</string>
     <string name="error_image_content_description">no video or connection</string>

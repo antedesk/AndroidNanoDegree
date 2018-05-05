@@ -12,8 +12,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/movies_list_rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/spinner_layout"/>
+        android:layout_height="match_parent"/>
 
     <!-- For error purpose. By default, this layout is invisible -->
     <LinearLayout
