@@ -173,7 +173,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
                 .into(mPosterIv);
         if(isFavorite) mFavoriteIv.setImageResource(R.mipmap.star);
         mReleaseDateTv.setText(movie.getReleaseDate());
-        mRatingTv.setText(String.format("%s / 10", movie.getVoteAvarage()));
+        mRatingTv.setText(String.format("%s / 10", movie.getVoteAverage()));
         mPlotSynopsisTv.setText(movie.getOverview());
     }
 
@@ -321,7 +321,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         cv.put(MovieEntry.COLUMN_TITLE, movie.getTitle());
         cv.put(MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
         cv.put(MovieEntry.COLUMN_POSTER_PATH, movie.getPosterPath());
-        cv.put(MovieEntry.COLUMN_VOTE_AVARAGE, movie.getVoteAvarage());
+        cv.put(MovieEntry.COLUMN_VOTE_AVARAGE, movie.getVoteAverage());
         cv.put(MovieEntry.COLUMN_OVERVIEW, movie.getOverview());
         cv.put(MovieEntry.COLUMN_VOTE_COUNT, movie.getVoteCount());
 
