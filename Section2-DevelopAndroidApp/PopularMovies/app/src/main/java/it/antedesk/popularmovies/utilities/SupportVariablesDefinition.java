@@ -18,6 +18,8 @@ public final class SupportVariablesDefinition {
 
     // tag for storing in the savedInstanceState the criteria to sort movies
     public static final String SORT_CRITERIUM = "sortCriterium";
+    public static final String SORT_CRITERIUM_TOP_RATED = "top_rated";
+    public static final String SORT_CRITERIUM_POPULAR = "popular";
 
 
     // getting the the class name to use as tag in Log method
