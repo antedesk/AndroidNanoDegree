@@ -27,7 +27,7 @@ public class Movie implements Parcelable {
     private String title;
     private String releaseDate;
     private String posterPath;
-    private double voteAvarage;
+    private double voteAverage;
     private String overview;
     private long voteCount;
     // a movie can have a list of trailers and reviews
@@ -44,7 +44,7 @@ public class Movie implements Parcelable {
         this.title = title;
         this.releaseDate = releaseDate;
         this.posterPath = posterPath;
-        this.voteAvarage = voteAvarage;
+        this.voteAverage = voteAvarage;
         this.overview = overview;
         this.voteCount = voteCount;
     }
@@ -56,7 +56,7 @@ public class Movie implements Parcelable {
         title = in.readString();
         releaseDate = in.readString();
         posterPath = in.readString();
-        voteAvarage = in.readDouble();
+        voteAverage = in.readDouble();
         overview = in.readString();
     }
 
@@ -85,8 +85,8 @@ public class Movie implements Parcelable {
         return posterPath;
     }
 
-    public double getVoteAvarage() {
-        return voteAvarage;
+    public double getVoteAverage() {
+        return voteAverage;
     }
 
     public String getOverview() {
@@ -133,7 +133,7 @@ public class Movie implements Parcelable {
                 ", title='" + title + '\'' +
                 ", releaseDate='" + releaseDate + '\'' +
                 ", posterPath='" + posterPath + '\'' +
-                ", voteAvarage=" + voteAvarage +
+                ", voteAverage=" + voteAverage +
                 ", overview='" + overview + '\'' +
                 '}';
     }
@@ -151,7 +151,7 @@ public class Movie implements Parcelable {
         dest.writeString(title);
         dest.writeString(releaseDate);
         dest.writeString(posterPath);
-        dest.writeDouble(voteAvarage);
+        dest.writeDouble(voteAverage);
         dest.writeString(overview);
     }
 
