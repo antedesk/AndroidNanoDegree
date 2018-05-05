@@ -20,10 +20,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -240,8 +242,23 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
 
     private void showMoviesDataView(Movie movie){
         populateUI(movie);
-        mReviewViewAdapter.setReviewsData(movie.getReviews());
-        mTrailerViewAdapter.setTrailersData(movie.getTrailers());
+        if(!NetworkUtils.isOnline(this)){
+            mTrailerRecyclerView.setVisibility(View.INVISIBLE);
+            mReviewsRecyclerView.setVisibility(View.INVISIBLE);
+            findViewById(R.id.separator2_view).setVisibility(View.INVISIBLE);
+            findViewById(R.id.separator3_view).setVisibility(View.INVISIBLE);
+        } else if(movie.getTrailers().size() == 0){
+            mReviewViewAdapter.setReviewsData(movie.getReviews());
+            findViewById(R.id.separator3_view).setVisibility(View.INVISIBLE);
+            findViewById(R.id.trailers_list_rv).setVisibility(View.INVISIBLE);
+        } else if(movie.getReviews().size() ==0){
+            mTrailerViewAdapter.setTrailersData(movie.getTrailers());
+            findViewById(R.id.separator3_view).setVisibility(View.INVISIBLE);
+            findViewById(R.id.reviews_list_rv).setVisibility(View.INVISIBLE);
+        } else{
+            mReviewViewAdapter.setReviewsData(movie.getReviews());
+            mTrailerViewAdapter.setTrailersData(movie.getTrailers());
+        }
     }
 
     @Override
