@@ -178,8 +178,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     }
 
     private void closeOnError() {
-        finish();
-        Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_LONG).show();
     }
 
 

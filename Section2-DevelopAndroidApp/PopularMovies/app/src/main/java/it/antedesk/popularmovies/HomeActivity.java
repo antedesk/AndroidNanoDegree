@@ -20,7 +20,6 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import it.antedesk.popularmovies.adapter.MovieViewAdapter;

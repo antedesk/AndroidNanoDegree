@@ -6,7 +6,7 @@
         <item>top_rated</item>
     </string-array>
     <string name="grid_poster_cd">movie poster</string>
-    <string name="detail_error_message">Ops! You are not online.\nPlease, check your connectivity</string>
+    <string name="detail_error_message">Ops! You are not online.\nPlease, check your connectivity.\nYou can access only some info.</string>
     <string name="error_image_content_description">no video or connection</string>
     <string name="movie_image_content_description">movie poster</string>
     <string name="fake_title_tv">The legend of Udacity</string>

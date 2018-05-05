@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="it.antedesk.popularmovies.WelcomeActivity"
     tools:showIn="@layout/app_bar_welcome">
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/movies_list_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/spinner_layout"/>
+
+    <!-- For error purpose. By default, this layout is invisible -->
+    <LinearLayout
+        android:id="@+id/connection_error_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:background="@drawable/error_background"
+        android:visibility="invisible">
+        <!-- image source https://tinyurl.com/y9czm97a -->
+        <ImageView
+            android:layout_width="@dimen/connection_error_iv"
+            android:layout_height="@dimen/connection_error_iv"
+            android:layout_margin="@dimen/layout_margin_5dp"
+            android:layout_gravity="center"
+            android:src="@drawable/broken_tv"
+            android:contentDescription="@string/error_image_content_description"/>
+        <TextView
+            style="@style/DetailsTextView"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/layout_margin_5dp"
+            android:text="@string/detail_error_message"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAlignment="center"/>
+    </LinearLayout>
+
+    <!-- Used by the AsyncTask for fetching the movies list. By default it is invisible-->
+    <ProgressBar
+        android:id="@+id/pb_loading_indicator"
+        android:layout_height="@dimen/progress_bar_size"
+        android:layout_width="@dimen/progress_bar_size"
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
+
+</RelativeLayout>
