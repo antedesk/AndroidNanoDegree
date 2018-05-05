@@ -21,10 +21,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".MovieDetailActivity" />
+
         <provider
-            android:name="it.antedesk.popularmovies.data.MovieContentProvider"
+            android:name=".data.MovieContentProvider"
             android:authorities="it.antedesk.popularmovies"
-            android:exported="false"/>
+            android:exported="false" />
+
+        <activity
+            android:name=".WelcomeActivity"
+            android:label="@string/title_activity_welcome"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

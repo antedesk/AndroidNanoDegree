@@ -1,0 +1,5 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <item name="ic_menu_popular_movie" type="drawable">@drawable/ic_menu_popular_movie</item>
+    <item name="ic_menu_top_rated" type="drawable">@drawable/ic_menu_top_rated</item>
+    <item name="ic_menu_favorite" type="drawable">@drawable/ic_menu_favorite</item>
+</resources>
