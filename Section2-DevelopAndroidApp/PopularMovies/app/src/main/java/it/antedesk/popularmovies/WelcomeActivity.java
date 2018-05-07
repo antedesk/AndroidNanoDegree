@@ -1,5 +1,6 @@
 package it.antedesk.popularmovies;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,7 +60,6 @@ public class WelcomeActivity extends AppCompatActivity implements NavigationView
     // This number will uniquely identify our Loader and is chosen arbitrarily.
     private static final int MOVIES_LOADER = 22;
     private static final String MOVIES_LOADER_CRITERIUM = "load_criterium";
-    private static final int numberOfColums = 2;
 
     private List<Movie> movies;
     private int menuItemId;
@@ -77,26 +78,23 @@ public class WelcomeActivity extends AppCompatActivity implements NavigationView
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
+        //start Loader for getting movies list
+        getSupportLoaderManager().initLoader(MOVIES_LOADER, null, this);
 
+        // creating a LinearLayoutManager
+        GridLayoutManager layoutManager
+                = new GridLayoutManager(this, calculateNoOfColumns(this));
 
+        // setting the layoutManager on mRecyclerView
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        mMovieViewAdapter = new MovieViewAdapter(this);
+        mRecyclerView.setAdapter(mMovieViewAdapter);
 
-            //start Loader for getting movies list
-            getSupportLoaderManager().initLoader(MOVIES_LOADER, null, this);
-
-            // creating a LinearLayoutManager
-            GridLayoutManager layoutManager
-                    = new GridLayoutManager(this, numberOfColums);
-
-            // setting the layoutManager on mRecyclerView
-            mRecyclerView.setLayoutManager(layoutManager);
-            mRecyclerView.setHasFixedSize(true);
-            mMovieViewAdapter = new MovieViewAdapter(this);
-            mRecyclerView.setAdapter(mMovieViewAdapter);
-
-            menuItemId = savedInstanceState!=null
-                    && savedInstanceState.containsKey(SORT_CRITERIUM) ? savedInstanceState.getInt(SORT_CRITERIUM) : 0;
-            navigationView.getMenu().getItem(menuItemId).setChecked(true);
-            navigationView.getMenu().performIdentifierAction(navigationView.getMenu().getItem(menuItemId).getItemId(), 0);
+        menuItemId = savedInstanceState!=null
+                && savedInstanceState.containsKey(SORT_CRITERIUM) ? savedInstanceState.getInt(SORT_CRITERIUM) : 0;
+        navigationView.getMenu().getItem(menuItemId).setChecked(true);
+        navigationView.getMenu().performIdentifierAction(navigationView.getMenu().getItem(menuItemId).getItemId(), 0);
 
     }
 
@@ -284,5 +282,20 @@ public class WelcomeActivity extends AppCompatActivity implements NavigationView
             Log.d("ContentProvider", "isFavorite "+movies.size());
         }
         return movies;
+    }
+
+    /**
+     * Calculates the number of columns for the gridlayout
+     * @param context
+     * @return
+     */
+    public static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int scalingFactor = 180;
+        int noOfColumns = (int) (dpWidth / scalingFactor);
+        if(noOfColumns < 2)
+            noOfColumns = 2;
+        return noOfColumns;
     }
 }
