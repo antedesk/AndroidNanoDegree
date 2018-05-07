@@ -20,7 +20,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 

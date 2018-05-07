@@ -280,7 +280,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
                                         boolean wasRestored) {
         if (!wasRestored) {
             mYouTubePlayer = youTubePlayer;
-            if(movie!=null)
+            if(movie!=null && movie.getTrailers()!=null && !movie.getTrailers().isEmpty())
                 youTubePlayer.cueVideo(movie.getTrailers().get(0).getKey());
         }
     }
