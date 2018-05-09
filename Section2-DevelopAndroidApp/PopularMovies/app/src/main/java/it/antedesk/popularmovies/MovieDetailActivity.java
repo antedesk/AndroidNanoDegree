@@ -5,8 +5,9 @@ import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Parcelable;
+import android.os.PersistableBundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.LoaderManager;
@@ -44,7 +45,6 @@ import butterknife.ButterKnife;
 import it.antedesk.popularmovies.adapter.ReviewViewAdapter;
 import it.antedesk.popularmovies.adapter.TrailerViewAdapter;
 import it.antedesk.popularmovies.data.MovieContract.MovieEntry;
-import it.antedesk.popularmovies.data.MovieDbHelper;
 import it.antedesk.popularmovies.model.Movie;
 import it.antedesk.popularmovies.model.Review;
 import it.antedesk.popularmovies.model.Trailer;
@@ -58,13 +58,16 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         TrailerViewAdapter.TrailerViewAdapterOnClickHandler,
         YouTubePlayer.OnInitializedListener {
 
+    private static final String TRAILER_LIST_STATE = "trailer_list_state";
+    private static final String REVIEW_LIST_STATE = "review_list_state";
+    private static final String SCROLL_POSITION = "SCROLL_POSITION";
     // UI elements
     @BindView(R.id.poster_iv) ImageView mPosterIv;
     @BindView(R.id.release_date_tv) TextView mReleaseDateTv;
     @BindView(R.id.vote_average_tv) TextView mRatingTv;
     @BindView(R.id.overview_tv) TextView mPlotSynopsisTv;
     @BindView(R.id.favorite_iv) ImageView mFavoriteIv;
-
+    @BindView(R.id.scroll) NestedScrollView mScroll;
     @BindView(R.id.reviews_list_rv) RecyclerView mReviewsRecyclerView;
     private ReviewViewAdapter mReviewViewAdapter;
     @BindView(R.id.trailers_list_rv) RecyclerView mTrailerRecyclerView;
@@ -82,16 +85,14 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
 
     private Movie movie;
 
-    private SQLiteDatabase mFavMovieDb;
+    private Parcelable mTrailerListState = null;
+    private Parcelable mReviewListState  = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
         ButterKnife.bind(this);
-
-        MovieDbHelper dbHelper = new MovieDbHelper(this);
-        mFavMovieDb = dbHelper.getWritableDatabase();
 
         // finding UI elements
         mYuoTubePlayerFrag =
@@ -114,6 +115,22 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         mReviewsRecyclerView.setAdapter(mReviewViewAdapter);
         mTrailerRecyclerView.setAdapter(mTrailerViewAdapter);
 
+        if(savedInstanceState!=null
+                && savedInstanceState.containsKey(REVIEW_LIST_STATE)
+                && savedInstanceState.containsKey(TRAILER_LIST_STATE)) {
+            mReviewListState = savedInstanceState.getParcelable(REVIEW_LIST_STATE);
+            mTrailerListState = savedInstanceState.getParcelable(TRAILER_LIST_STATE);
+        }
+        if(savedInstanceState!=null
+                && savedInstanceState.containsKey(SCROLL_POSITION)) {
+            final int[] position = savedInstanceState.getIntArray(SCROLL_POSITION);
+            if (position != null)
+                mScroll.post(new Runnable() {
+                    public void run() {
+                        mScroll.scrollTo(position[0], position[1]);
+                    }
+                });
+        }
         // Checking the internet connnection.
         if(!NetworkUtils.isOnline(this)){
             closeOnError();
@@ -146,6 +163,18 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
                 }
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        mTrailerListState = mTrailerRecyclerView.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(TRAILER_LIST_STATE, mTrailerListState);
+        mReviewListState = mTrailerRecyclerView.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(REVIEW_LIST_STATE, mReviewListState);
+
+        outState.putIntArray(SCROLL_POSITION,
+                new int[]{ mScroll.getScrollX(), mScroll.getScrollY()});
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     private void loadAdditionalInfo(Movie movie) {
@@ -245,14 +274,22 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         if(!NetworkUtils.isOnline(this)){
             mTrailerRecyclerView.setVisibility(View.INVISIBLE);
             mReviewsRecyclerView.setVisibility(View.INVISIBLE);
+            if (mTrailerListState!=null)
+                mTrailerRecyclerView.getLayoutManager().onRestoreInstanceState(mTrailerListState);
+            if (mReviewListState!=null)
+                mReviewsRecyclerView.getLayoutManager().onRestoreInstanceState(mReviewListState);
             findViewById(R.id.separator2_view).setVisibility(View.INVISIBLE);
             findViewById(R.id.separator3_view).setVisibility(View.INVISIBLE);
         } else if(movie.getTrailers().size() == 0){
             mReviewViewAdapter.setReviewsData(movie.getReviews());
+            if (mReviewListState!=null)
+                mReviewsRecyclerView.getLayoutManager().onRestoreInstanceState(mReviewListState);
             findViewById(R.id.separator3_view).setVisibility(View.INVISIBLE);
             findViewById(R.id.trailers_list_rv).setVisibility(View.INVISIBLE);
         } else if(movie.getReviews().size() ==0){
             mTrailerViewAdapter.setTrailersData(movie.getTrailers());
+            if (mTrailerListState!=null)
+                mTrailerRecyclerView.getLayoutManager().onRestoreInstanceState(mTrailerListState);
             findViewById(R.id.separator3_view).setVisibility(View.INVISIBLE);
             findViewById(R.id.reviews_list_rv).setVisibility(View.INVISIBLE);
         } else{
@@ -323,8 +360,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         if (mYuoTubePlayerFrag != null && mYouTubePlayer != null) {
             //load the selected video
             mYouTubePlayer.cueVideo(selectedTrailer.getKey());
-            NestedScrollView scroll = findViewById(R.id.scroll);
-            scroll.scrollTo(0, 0);;
+
+            mScroll.scrollTo(0, 0);;
             AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
             appBarLayout.setExpanded(true);
         }
@@ -344,7 +381,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         Uri uri = getContentResolver().insert(MovieEntry.CONTENT_URI, cv);
         if(uri == null) {
             added = false;
-            Toast.makeText(getBaseContext(),"Error: movie not added to favorites", Toast.LENGTH_LONG).show();
+            String error = getString(R.string.add_favorite_error);
+            Toast.makeText(getBaseContext(),error, Toast.LENGTH_LONG).show();
         }
         Log.d("ContentProvider", "added "+added);
         return added;
