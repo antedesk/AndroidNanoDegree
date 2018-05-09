@@ -115,21 +115,22 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         mReviewsRecyclerView.setAdapter(mReviewViewAdapter);
         mTrailerRecyclerView.setAdapter(mTrailerViewAdapter);
 
-        if(savedInstanceState!=null
-                && savedInstanceState.containsKey(REVIEW_LIST_STATE)
-                && savedInstanceState.containsKey(TRAILER_LIST_STATE)) {
-            mReviewListState = savedInstanceState.getParcelable(REVIEW_LIST_STATE);
-            mTrailerListState = savedInstanceState.getParcelable(TRAILER_LIST_STATE);
-        }
-        if(savedInstanceState!=null
-                && savedInstanceState.containsKey(SCROLL_POSITION)) {
-            final int[] position = savedInstanceState.getIntArray(SCROLL_POSITION);
-            if (position != null)
-                mScroll.post(new Runnable() {
-                    public void run() {
-                        mScroll.scrollTo(position[0], position[1]);
-                    }
-                });
+        if(savedInstanceState!=null) {
+            if (savedInstanceState.containsKey(REVIEW_LIST_STATE)) {
+                mReviewListState = savedInstanceState.getParcelable(REVIEW_LIST_STATE);
+            }
+            if (savedInstanceState.containsKey(TRAILER_LIST_STATE)) {
+                mTrailerListState = savedInstanceState.getParcelable(TRAILER_LIST_STATE);
+            }
+            if (savedInstanceState.containsKey(SCROLL_POSITION)) {
+                final int[] position = savedInstanceState.getIntArray(SCROLL_POSITION);
+                if (position != null)
+                    mScroll.post(new Runnable() {
+                        public void run() {
+                            mScroll.scrollTo(position[0], position[1]);
+                        }
+                    });
+            }
         }
         // Checking the internet connnection.
         if(!NetworkUtils.isOnline(this)){
@@ -169,7 +170,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         mTrailerListState = mTrailerRecyclerView.getLayoutManager().onSaveInstanceState();
         outState.putParcelable(TRAILER_LIST_STATE, mTrailerListState);
-        mReviewListState = mTrailerRecyclerView.getLayoutManager().onSaveInstanceState();
+        mReviewListState = mReviewsRecyclerView.getLayoutManager().onSaveInstanceState();
         outState.putParcelable(REVIEW_LIST_STATE, mReviewListState);
 
         outState.putIntArray(SCROLL_POSITION,
