@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.os.PersistableBundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -64,6 +66,9 @@ public class WelcomeActivity extends AppCompatActivity implements NavigationView
     private List<Movie> movies;
     private int menuItemId;
 
+    private static final String LIST_STATE = "listState";
+    private Parcelable mListState = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,16 +86,20 @@ public class WelcomeActivity extends AppCompatActivity implements NavigationView
         //start Loader for getting movies list
         getSupportLoaderManager().initLoader(MOVIES_LOADER, null, this);
 
-        // creating a LinearLayoutManager
-        GridLayoutManager layoutManager
+        // creating a GridLayoutManager
+        GridLayoutManager mLayoutManager
                 = new GridLayoutManager(this, calculateNoOfColumns(this));
 
-        // setting the layoutManager on mRecyclerView
-        mRecyclerView.setLayoutManager(layoutManager);
+
+        // setting the mlayoutManager on mRecyclerView
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mMovieViewAdapter = new MovieViewAdapter(this);
         mRecyclerView.setAdapter(mMovieViewAdapter);
-
+        if(savedInstanceState!=null
+                && savedInstanceState.containsKey(LIST_STATE)) {
+            mListState = savedInstanceState.getParcelable(LIST_STATE);
+        }
         menuItemId = savedInstanceState!=null
                 && savedInstanceState.containsKey(SORT_CRITERIUM) ? savedInstanceState.getInt(SORT_CRITERIUM) : 0;
         navigationView.getMenu().getItem(menuItemId).setChecked(true);
@@ -165,6 +174,8 @@ public class WelcomeActivity extends AppCompatActivity implements NavigationView
 
     private void showMoviesDataView(List<Movie> movies){
         mMovieViewAdapter.setMoviesData(movies);
+        if (mListState!=null)
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(mListState);
     }
 
     public void showErrorMessage(){
@@ -176,6 +187,8 @@ public class WelcomeActivity extends AppCompatActivity implements NavigationView
     public void onSaveInstanceState(Bundle outState) {
         // saving the current state of the spinner
         outState.putInt(SORT_CRITERIUM, menuItemId);
+        mListState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(LIST_STATE, mListState);
         super.onSaveInstanceState(outState);
     }
 
