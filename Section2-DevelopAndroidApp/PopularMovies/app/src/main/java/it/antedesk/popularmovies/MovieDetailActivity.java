@@ -59,6 +59,9 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
 
     private static final String DIALOG_FRAGMENT = "DIALOG_FRAGMENT";
 
+    private static final String REVIEW_LIST_STATE = "revListState";
+    private Parcelable mReviewListState = null;
+
     // UI elements
     @BindView(R.id.poster_iv) ImageView mPosterIv;
     @BindView(R.id.release_date_tv) TextView mReleaseDateTv;
@@ -112,7 +115,10 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
 
         mReviewsRecyclerView.setAdapter(mReviewViewAdapter);
         mTrailerRecyclerView.setAdapter(mTrailerViewAdapter);
-
+        if(savedInstanceState!=null
+                && savedInstanceState.containsKey(REVIEW_LIST_STATE)) {
+            mReviewListState = savedInstanceState.getParcelable(REVIEW_LIST_STATE);
+        }
         // Checking the internet connnection.
         if(!NetworkUtils.isOnline(this)){
             closeOnError();
@@ -150,6 +156,9 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        mReviewListState = mReviewsRecyclerView.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(REVIEW_LIST_STATE, mReviewListState);
     }
 
     private void loadAdditionalInfo(Movie movie) {
@@ -249,10 +258,14 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         if(!NetworkUtils.isOnline(this)){
             mTrailerRecyclerView.setVisibility(View.INVISIBLE);
             mReviewsRecyclerView.setVisibility(View.INVISIBLE);
+            if (mReviewListState!=null)
+                mReviewsRecyclerView.getLayoutManager().onRestoreInstanceState(mReviewListState);
             findViewById(R.id.separator2_view).setVisibility(View.INVISIBLE);
             findViewById(R.id.separator3_view).setVisibility(View.INVISIBLE);
         } else if(movie.getTrailers().size() == 0){
             mReviewViewAdapter.setReviewsData(movie.getReviews());
+            if (mReviewListState!=null)
+                mReviewsRecyclerView.getLayoutManager().onRestoreInstanceState(mReviewListState);
             findViewById(R.id.separator3_view).setVisibility(View.INVISIBLE);
             findViewById(R.id.trailers_list_rv).setVisibility(View.INVISIBLE);
         } else if(movie.getReviews().size() ==0){
