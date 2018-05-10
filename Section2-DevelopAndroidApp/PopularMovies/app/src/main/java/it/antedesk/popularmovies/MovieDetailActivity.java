@@ -10,6 +10,7 @@ import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
@@ -21,12 +22,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +40,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import fragment.ReviewDialog;
 import it.antedesk.popularmovies.adapter.ReviewViewAdapter;
 import it.antedesk.popularmovies.adapter.TrailerViewAdapter;
 import it.antedesk.popularmovies.data.MovieContract.MovieEntry;
@@ -58,9 +57,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         TrailerViewAdapter.TrailerViewAdapterOnClickHandler,
         YouTubePlayer.OnInitializedListener {
 
-    private static final String TRAILER_LIST_STATE = "trailer_list_state";
-    private static final String REVIEW_LIST_STATE = "review_list_state";
-    private static final String SCROLL_POSITION = "SCROLL_POSITION";
+    private static final String DIALOG_FRAGMENT = "DIALOG_FRAGMENT";
+
     // UI elements
     @BindView(R.id.poster_iv) ImageView mPosterIv;
     @BindView(R.id.release_date_tv) TextView mReleaseDateTv;
@@ -85,8 +83,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
 
     private Movie movie;
 
-    private Parcelable mTrailerListState = null;
-    private Parcelable mReviewListState  = null;
+/*    private Parcelable mTrailerListState = null;
+    private Parcelable mReviewListState  = null;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,23 +113,6 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         mReviewsRecyclerView.setAdapter(mReviewViewAdapter);
         mTrailerRecyclerView.setAdapter(mTrailerViewAdapter);
 
-        if(savedInstanceState!=null) {
-            if (savedInstanceState.containsKey(REVIEW_LIST_STATE)) {
-                mReviewListState = savedInstanceState.getParcelable(REVIEW_LIST_STATE);
-            }
-            if (savedInstanceState.containsKey(TRAILER_LIST_STATE)) {
-                mTrailerListState = savedInstanceState.getParcelable(TRAILER_LIST_STATE);
-            }
-            if (savedInstanceState.containsKey(SCROLL_POSITION)) {
-                final int[] position = savedInstanceState.getIntArray(SCROLL_POSITION);
-                if (position != null)
-                    mScroll.post(new Runnable() {
-                        public void run() {
-                            mScroll.scrollTo(position[0], position[1]);
-                        }
-                    });
-            }
-        }
         // Checking the internet connnection.
         if(!NetworkUtils.isOnline(this)){
             closeOnError();
@@ -167,15 +148,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        mTrailerListState = mTrailerRecyclerView.getLayoutManager().onSaveInstanceState();
-        outState.putParcelable(TRAILER_LIST_STATE, mTrailerListState);
-        mReviewListState = mReviewsRecyclerView.getLayoutManager().onSaveInstanceState();
-        outState.putParcelable(REVIEW_LIST_STATE, mReviewListState);
-
-        outState.putIntArray(SCROLL_POSITION,
-                new int[]{ mScroll.getScrollX(), mScroll.getScrollY()});
-        super.onSaveInstanceState(outState, outPersistentState);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     private void loadAdditionalInfo(Movie movie) {
@@ -275,22 +249,14 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         if(!NetworkUtils.isOnline(this)){
             mTrailerRecyclerView.setVisibility(View.INVISIBLE);
             mReviewsRecyclerView.setVisibility(View.INVISIBLE);
-            if (mTrailerListState!=null)
-                mTrailerRecyclerView.getLayoutManager().onRestoreInstanceState(mTrailerListState);
-            if (mReviewListState!=null)
-                mReviewsRecyclerView.getLayoutManager().onRestoreInstanceState(mReviewListState);
             findViewById(R.id.separator2_view).setVisibility(View.INVISIBLE);
             findViewById(R.id.separator3_view).setVisibility(View.INVISIBLE);
         } else if(movie.getTrailers().size() == 0){
             mReviewViewAdapter.setReviewsData(movie.getReviews());
-            if (mReviewListState!=null)
-                mReviewsRecyclerView.getLayoutManager().onRestoreInstanceState(mReviewListState);
             findViewById(R.id.separator3_view).setVisibility(View.INVISIBLE);
             findViewById(R.id.trailers_list_rv).setVisibility(View.INVISIBLE);
         } else if(movie.getReviews().size() ==0){
             mTrailerViewAdapter.setTrailersData(movie.getTrailers());
-            if (mTrailerListState!=null)
-                mTrailerRecyclerView.getLayoutManager().onRestoreInstanceState(mTrailerListState);
             findViewById(R.id.separator3_view).setVisibility(View.INVISIBLE);
             findViewById(R.id.reviews_list_rv).setVisibility(View.INVISIBLE);
         } else{
@@ -345,14 +311,18 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     @Override
     public void onClick(Review selectedReview) {
         Log.d(MOVIE_TAG, selectedReview.toString());
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_review);
-        TextView reviewerName = dialog.findViewById(R.id.reviewer_name_tv);
-        TextView reviewContent = dialog.findViewById(R.id.review_content_tv);
-        reviewerName.setText(selectedReview.getAuthor());
-        reviewContent.setText(selectedReview.getContent());
-        dialog.show();
+//        final Dialog dialog = new Dialog(this);
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        dialog.setContentView(R.layout.dialog_review);
+//        TextView reviewerName = dialog.findViewById(R.id.reviewer_name_tv);
+//        TextView reviewContent = dialog.findViewById(R.id.review_content_tv);
+//        reviewerName.setText(selectedReview.getAuthor());
+//        reviewContent.setText(selectedReview.getContent());
+//        dialog.show();
+        FragmentManager fm = getSupportFragmentManager();
+        ReviewDialog editNameDialogFragment =
+                ReviewDialog.newInstance(selectedReview.getAuthor(), selectedReview.getContent());
+        editNameDialogFragment.show(fm, DIALOG_FRAGMENT);
     }
 
     @Override
