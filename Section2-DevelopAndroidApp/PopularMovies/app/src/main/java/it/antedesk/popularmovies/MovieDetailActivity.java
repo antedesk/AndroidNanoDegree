@@ -167,9 +167,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         super.onSaveInstanceState(outState);
 
         mReviewListState = mReviewsRecyclerView.getLayoutManager().onSaveInstanceState();
-        outState.putParcelable(REVIEW_LIST_STATE, mReviewListState);
-
         mTrailerListState = mTrailerRecyclerView.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(REVIEW_LIST_STATE, mReviewListState);
         outState.putParcelable(TRAILER_LIST_STATE, mTrailerListState);
 
         outState.putIntArray(SCROLL_POSITION,
