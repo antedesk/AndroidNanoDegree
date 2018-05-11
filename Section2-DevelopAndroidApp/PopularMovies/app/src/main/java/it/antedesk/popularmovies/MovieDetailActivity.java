@@ -60,7 +60,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     private static final String DIALOG_FRAGMENT = "DIALOG_FRAGMENT";
 
     private static final String REVIEW_LIST_STATE = "revListState";
-    private Parcelable mReviewListState = null;
+    private static final String TRAILER_LIST_STATE = "revListState";
     private static final String SCROLL_POSITION = "SCROLL_POSITION";
 
     // UI elements
@@ -88,8 +88,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     private Movie movie;
     private int[] scrollPosition = null;
 
-/*    private Parcelable mTrailerListState = null;
-    private Parcelable mReviewListState  = null;*/
+    private Parcelable mTrailerListState = null;
+    private Parcelable mReviewListState  = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,13 +117,16 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
 
         mReviewsRecyclerView.setAdapter(mReviewViewAdapter);
         mTrailerRecyclerView.setAdapter(mTrailerViewAdapter);
-        if(savedInstanceState!=null
-                && savedInstanceState.containsKey(REVIEW_LIST_STATE)) {
-            mReviewListState = savedInstanceState.getParcelable(REVIEW_LIST_STATE);
-        }
-        if(savedInstanceState!=null
-                && savedInstanceState.containsKey(SCROLL_POSITION)) {
-            scrollPosition = savedInstanceState.getIntArray(SCROLL_POSITION);
+        if(savedInstanceState!=null) {
+            if (savedInstanceState.containsKey(REVIEW_LIST_STATE)){
+                mReviewListState = savedInstanceState.getParcelable(REVIEW_LIST_STATE);
+            }
+            if (savedInstanceState.containsKey(TRAILER_LIST_STATE)) {
+                mTrailerListState = savedInstanceState.getParcelable(TRAILER_LIST_STATE);
+            }
+            if (savedInstanceState.containsKey(SCROLL_POSITION)) {
+                scrollPosition = savedInstanceState.getIntArray(SCROLL_POSITION);
+            }
         }
         // Checking the internet connnection.
         if(!NetworkUtils.isOnline(this)){
@@ -166,9 +169,12 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         mReviewListState = mReviewsRecyclerView.getLayoutManager().onSaveInstanceState();
         outState.putParcelable(REVIEW_LIST_STATE, mReviewListState);
 
+        mTrailerListState = mTrailerRecyclerView.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(TRAILER_LIST_STATE, mTrailerListState);
+
         outState.putIntArray(SCROLL_POSITION,
                 new int[]{ mScroll.getScrollX(), mScroll.getScrollY()});
-        super.onSaveInstanceState(outState);
+
     }
 
     private void loadAdditionalInfo(Movie movie) {
@@ -275,14 +281,10 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         if(!NetworkUtils.isOnline(this)){
             mTrailerRecyclerView.setVisibility(View.INVISIBLE);
             mReviewsRecyclerView.setVisibility(View.INVISIBLE);
-            if (mReviewListState!=null)
-                mReviewsRecyclerView.getLayoutManager().onRestoreInstanceState(mReviewListState);
             findViewById(R.id.separator2_view).setVisibility(View.INVISIBLE);
             findViewById(R.id.separator3_view).setVisibility(View.INVISIBLE);
         } else if(movie.getTrailers().size() == 0){
             mReviewViewAdapter.setReviewsData(movie.getReviews());
-            if (mReviewListState!=null)
-                mReviewsRecyclerView.getLayoutManager().onRestoreInstanceState(mReviewListState);
             findViewById(R.id.separator3_view).setVisibility(View.INVISIBLE);
             findViewById(R.id.trailers_list_rv).setVisibility(View.INVISIBLE);
         } else if(movie.getReviews().size() ==0){
@@ -293,6 +295,12 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
             mReviewViewAdapter.setReviewsData(movie.getReviews());
             mTrailerViewAdapter.setTrailersData(movie.getTrailers());
         }
+
+        if (mReviewListState!=null)
+            mReviewsRecyclerView.getLayoutManager().onRestoreInstanceState(mReviewListState);
+
+        if (mTrailerListState!=null)
+            mTrailerRecyclerView.getLayoutManager().onRestoreInstanceState(mTrailerListState);
     }
 
     @Override
