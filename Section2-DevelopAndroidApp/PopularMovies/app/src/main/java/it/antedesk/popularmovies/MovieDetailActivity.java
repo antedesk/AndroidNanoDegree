@@ -61,6 +61,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
 
     private static final String REVIEW_LIST_STATE = "revListState";
     private Parcelable mReviewListState = null;
+    private static final String SCROLL_POSITION = "SCROLL_POSITION";
 
     // UI elements
     @BindView(R.id.poster_iv) ImageView mPosterIv;
@@ -85,6 +86,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     private boolean isFavorite = false;
 
     private Movie movie;
+    private int[] scrollPosition = null;
 
 /*    private Parcelable mTrailerListState = null;
     private Parcelable mReviewListState  = null;*/
@@ -118,6 +120,10 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         if(savedInstanceState!=null
                 && savedInstanceState.containsKey(REVIEW_LIST_STATE)) {
             mReviewListState = savedInstanceState.getParcelable(REVIEW_LIST_STATE);
+        }
+        if(savedInstanceState!=null
+                && savedInstanceState.containsKey(SCROLL_POSITION)) {
+            scrollPosition = savedInstanceState.getIntArray(SCROLL_POSITION);
         }
         // Checking the internet connnection.
         if(!NetworkUtils.isOnline(this)){
@@ -159,6 +165,10 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
 
         mReviewListState = mReviewsRecyclerView.getLayoutManager().onSaveInstanceState();
         outState.putParcelable(REVIEW_LIST_STATE, mReviewListState);
+
+        outState.putIntArray(SCROLL_POSITION,
+                new int[]{ mScroll.getScrollX(), mScroll.getScrollY()});
+        super.onSaveInstanceState(outState);
     }
 
     private void loadAdditionalInfo(Movie movie) {
@@ -190,6 +200,13 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
         mReleaseDateTv.setText(movie.getReleaseDate());
         mRatingTv.setText(String.format("%s / 10", movie.getVoteAverage()));
         mPlotSynopsisTv.setText(movie.getOverview());
+
+        if (scrollPosition != null)
+            mScroll.post(new Runnable() {
+                public void run() {
+                    mScroll.scrollTo(scrollPosition[0], scrollPosition[1]);
+                }
+            });
     }
 
     private void closeOnError() {
@@ -324,14 +341,6 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     @Override
     public void onClick(Review selectedReview) {
         Log.d(MOVIE_TAG, selectedReview.toString());
-//        final Dialog dialog = new Dialog(this);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setContentView(R.layout.dialog_review);
-//        TextView reviewerName = dialog.findViewById(R.id.reviewer_name_tv);
-//        TextView reviewContent = dialog.findViewById(R.id.review_content_tv);
-//        reviewerName.setText(selectedReview.getAuthor());
-//        reviewContent.setText(selectedReview.getContent());
-//        dialog.show();
         FragmentManager fm = getSupportFragmentManager();
         ReviewDialog editNameDialogFragment =
                 ReviewDialog.newInstance(selectedReview.getAuthor(), selectedReview.getContent());
