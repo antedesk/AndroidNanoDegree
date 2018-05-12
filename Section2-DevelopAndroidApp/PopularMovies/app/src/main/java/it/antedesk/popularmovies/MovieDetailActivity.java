@@ -60,7 +60,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     private static final String DIALOG_FRAGMENT = "DIALOG_FRAGMENT";
 
     private static final String REVIEW_LIST_STATE = "revListState";
-    private static final String TRAILER_LIST_STATE = "revListState";
+    private static final String TRAILER_LIST_STATE = "trailerListState";
     private static final String SCROLL_POSITION = "SCROLL_POSITION";
 
     // UI elements
@@ -217,8 +217,6 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
     private void closeOnError() {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_LONG).show();
     }
-
-
 
     @SuppressLint("StaticFieldLeak")
     @Override
