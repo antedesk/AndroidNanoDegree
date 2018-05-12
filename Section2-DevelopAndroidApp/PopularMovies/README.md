@@ -29,6 +29,11 @@ Through this project, I learned to:
 - manage and design an user-friendly UI by using the CoordinatorLayout, animation, etc.
 
 ## Application screenshot for PopularMovies Stage 2
+
+<img src="../PopularMovies-screenshots/img.gif" height="40%" width="40%"/>
+
+Here, some screens details.
+
 List of popular, top rated movies selected throw a NavigationDrawer
 
 <img src="../PopularMovies-screenshots/img1.png" height="40%" width="40%"/>
