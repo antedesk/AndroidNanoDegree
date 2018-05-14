@@ -1,13 +1,11 @@
 package it.antedesk.popularmovies;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Parcelable;
-import android.os.PersistableBundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.FragmentManager;
@@ -40,7 +38,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import fragment.ReviewDialog;
+import it.antedesk.popularmovies.fragment.ReviewDialog;
 import it.antedesk.popularmovies.adapter.ReviewViewAdapter;
 import it.antedesk.popularmovies.adapter.TrailerViewAdapter;
 import it.antedesk.popularmovies.data.MovieContract.MovieEntry;
@@ -359,7 +357,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderCall
             //load the selected video
             mYouTubePlayer.cueVideo(selectedTrailer.getKey());
 
-            mScroll.scrollTo(0, 0);;
+            mScroll.scrollTo(0, 0);
             AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
             appBarLayout.setExpanded(true);
         }

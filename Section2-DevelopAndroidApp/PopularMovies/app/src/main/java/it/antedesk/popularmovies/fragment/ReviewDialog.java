@@ -1,4 +1,4 @@
-package fragment;
+package it.antedesk.popularmovies.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,7 +11,6 @@ import android.view.Window;
 import android.widget.TextView;
 
 import it.antedesk.popularmovies.R;
-import it.antedesk.popularmovies.model.Review;
 
 /**
  * Created by Antedesk on 10/05/2018.
