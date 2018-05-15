@@ -7,5 +7,10 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
+    <style name="CardViewRecipe" parent="CardView">
+        <item name="android:layout_margin">6dp</item>
+        <item name="cardElevation">5dp</item>
+        <item name="cardCornerRadius">5dp</item>
+        <item name="cardUseCompatPadding">true</item>
+    </style>
 </resources>
