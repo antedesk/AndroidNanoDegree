@@ -11,18 +11,18 @@ class Ingredient implements Parcelable{
 
     private double quantity;
     private String measure;
-    private String description;
+    private String ingredient;
 
-    public Ingredient(double quantity, String measure, String description) {
+    public Ingredient(double quantity, String measure, String ingredient) {
         this.quantity = quantity;
         this.measure = measure;
-        this.description = description;
+        this.ingredient = ingredient;
     }
 
     public Ingredient(Parcel in) {
         quantity = in.readDouble();
         measure = in.readString();
-        description = in.readString();
+        ingredient = in.readString();
     }
 
     public double getQuantity() {
@@ -41,12 +41,12 @@ class Ingredient implements Parcelable{
         this.measure = measure;
     }
 
-    public String getDescription() {
-        return description;
+    public String getIngredient() {
+        return ingredient;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setIngredient(String ingredient) {
+        this.ingredient = ingredient;
     }
 
     @Override
@@ -54,7 +54,7 @@ class Ingredient implements Parcelable{
         return "Ingredient{" +
                 "quantity=" + quantity +
                 ", measure='" + measure + '\'' +
-                ", description='" + description + '\'' +
+                ", ingredient='" + ingredient + '\'' +
                 '}';
     }
 
@@ -67,7 +67,7 @@ class Ingredient implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeDouble(quantity);
         dest.writeString(measure);
-        dest.writeString(description);
+        dest.writeString(ingredient);
     }
 
     public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
