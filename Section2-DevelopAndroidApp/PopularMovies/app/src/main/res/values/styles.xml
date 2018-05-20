@@ -31,8 +31,6 @@
         <item name="android:background">@color/red_netflix</item>
     </style>
 
-    <style name="RatingBarPM" parent="Widget.AppCompat.RatingBar"></style>
-
     <style name="CardViewMovieDetails" parent="CardView">
         <item name="android:layout_margin">6dp</item>
         <item name="cardElevation">5dp</item>
