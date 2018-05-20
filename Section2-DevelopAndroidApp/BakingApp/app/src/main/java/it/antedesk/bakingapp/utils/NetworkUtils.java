@@ -4,33 +4,26 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.io.IOException;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
+
+import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.RECIPES_DATASOURCE_URL;
+import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.RECIPES_LOADING;
 
 /**
  * Created by Antedesk on 15/05/2018.
  */
 
 public class NetworkUtils {
-
-    public static String getHttpResponse(String url) {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-        String response = null;
-        try {
-            Response httpResponse = client.newCall(request).execute();
-            response = httpResponse.body().string();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return response;
-    }
 
     /**
      * Allows to check if the app is connected to internet or not.
