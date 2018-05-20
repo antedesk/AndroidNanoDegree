@@ -168,9 +168,9 @@ public class HomeActivity extends AppCompatActivity  implements RecipeViewAdapte
     @Override
     public void onClick(Recipe selectedRecipe) {
         Log.d(HOME_ACTIVITY_LOADING, selectedRecipe.toString());
-        Intent intent = new Intent(this, StepDetailActivity.class);
-        intent.putExtra(HOME_ACTIVITY_LOADING, selectedRecipe);
-        startActivity(intent);
+        //Intent intent = new Intent(this, StepDetailActivity.class);
+        //intent.putExtra(HOME_ACTIVITY_LOADING, selectedRecipe);
+        //startActivity(intent);
 
     }
 }
