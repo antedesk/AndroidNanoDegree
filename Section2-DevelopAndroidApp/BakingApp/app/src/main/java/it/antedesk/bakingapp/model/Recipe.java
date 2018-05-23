@@ -3,6 +3,7 @@ package it.antedesk.bakingapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,11 +28,16 @@ public class Recipe implements Parcelable{
         this.image = image;
     }
 
+    public Recipe(){}
+
     protected Recipe(Parcel in) {
+        this();
         id = in.readLong();
         name = in.readString();
-        ingredients = in.createTypedArrayList(Ingredient.CREATOR);
-        steps = in.createTypedArrayList(Step.CREATOR);
+        ingredients = new ArrayList<>();
+        in.readList(ingredients, Ingredient.class.getClassLoader());
+        steps = new ArrayList<>();
+        in.readList(steps, Step.class.getClassLoader());
         servings = in.readInt();
         image = in.readString();
     }
