@@ -36,6 +36,7 @@ import okhttp3.ResponseBody;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.HOME_ACTIVITY_LOADING;
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.RECIPES_DATASOURCE_URL;
+import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.SELECTED_RECIPE;
 
 public class HomeActivity extends AppCompatActivity  implements RecipeViewAdapter.RecipeViewAdapterOnClickHandler{
 
@@ -109,6 +110,10 @@ public class HomeActivity extends AppCompatActivity  implements RecipeViewAdapte
         }
     }
 
+    /**
+     * Retrives the recipes from the json file by using okhttp lib with async call
+     * @throws Exception
+     */
     public void getRecipes() throws Exception {
         Request request = new Request.Builder()
                 .url(RECIPES_DATASOURCE_URL)
@@ -168,9 +173,8 @@ public class HomeActivity extends AppCompatActivity  implements RecipeViewAdapte
     @Override
     public void onClick(Recipe selectedRecipe) {
         Log.d(HOME_ACTIVITY_LOADING, selectedRecipe.toString());
-        //Intent intent = new Intent(this, StepDetailActivity.class);
-        //intent.putExtra(HOME_ACTIVITY_LOADING, selectedRecipe);
-        //startActivity(intent);
-
+        Intent intent = new Intent(this, RecipeDetailsActivity.class);
+        intent.putExtra(SELECTED_RECIPE, selectedRecipe);
+        startActivity(intent);
     }
 }

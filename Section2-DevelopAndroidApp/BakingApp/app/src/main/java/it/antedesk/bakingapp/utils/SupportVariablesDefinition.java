@@ -11,5 +11,8 @@ public final class SupportVariablesDefinition {
     //variable for logging
     public static final String HOME_ACTIVITY_LOADING = "HOME_ACTIVITY_LOADING";
     public static final String RECIPES_LOADING = "RECIPES_LOADING";
+    public static final String SELECTED_RECIPE = "SELECTED_RECIPE";
+    public static final String RECIPES_STEPS = "RECIPES_STEPS";
+    public static final String SELECTED_STEPS = "SELECTED_STEP";
 
 }

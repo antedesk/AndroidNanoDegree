@@ -3,4 +3,8 @@
     <string name="loading">Baking the recipes ...</string>
     <string name="title_step_list">Steps</string>
     <string name="title_step_detail">Step Detail</string>
+    <string name="detail_error_message">Ops! something went wrong!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
