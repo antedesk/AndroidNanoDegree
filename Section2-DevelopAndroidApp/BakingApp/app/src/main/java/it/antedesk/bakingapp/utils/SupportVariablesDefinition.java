@@ -14,5 +14,6 @@ public final class SupportVariablesDefinition {
     public static final String SELECTED_RECIPE = "SELECTED_RECIPE";
     public static final String RECIPES_STEPS = "RECIPES_STEPS";
     public static final String SELECTED_STEP = "SELECTED_STEP";
+    public static final String CURRENT_STEP = "SELECTED_STEP";
 
 }

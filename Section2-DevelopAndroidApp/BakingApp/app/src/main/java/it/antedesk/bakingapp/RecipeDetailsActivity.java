@@ -1,6 +1,7 @@
 package it.antedesk.bakingapp;
 
 import android.content.Intent;
+import android.os.PersistableBundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -15,8 +16,10 @@ import it.antedesk.bakingapp.fragment.StepFragment;
 import it.antedesk.bakingapp.model.Recipe;
 import it.antedesk.bakingapp.model.Step;
 
+import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.CURRENT_STEP;
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.RECIPES_STEPS;
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.SELECTED_RECIPE;
+import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.SELECTED_STEP;
 
 public class RecipeDetailsActivity extends AppCompatActivity implements StepFragment.OnListFragmentInteractionListener {
     public static final String STEP_MASTER_FRAGMENT = "STEP_MASTER_FRAGMENT";
@@ -26,7 +29,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
     Step currentStep;
     String mLastSinglePaneFragment;
     boolean mDualPane = false;
-
+    final String lastSinglePaneFragment = "lastSinglePaneFragment";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,18 +45,12 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
         if (mRecipe == null) {
             closeOnError();
         }
-/*
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        StepFragment stepFragment = new StepFragment();
-        Bundle stepsFragBundle = new Bundle();
-        stepsFragBundle.putParcelableArrayList(RECIPES_STEPS, (ArrayList<Step>) mRecipe.getSteps());
-        stepFragment.setArguments(stepsFragBundle);
-        fragmentManager.beginTransaction().add(R.id.steps_container, stepFragment).commit();
-*/
+
         mDualPane = findViewById(R.id.steps_details_container)!=null;
 
         if (savedInstanceState!=null) {
-            mLastSinglePaneFragment = savedInstanceState.getString("lastSinglePaneFragment");
+            mLastSinglePaneFragment = savedInstanceState.getString(lastSinglePaneFragment);
+            currentStep = savedInstanceState.getParcelable(CURRENT_STEP);
         }
 
         FragmentManager fm = getSupportFragmentManager();
@@ -80,6 +77,15 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(!mDualPane && currentStep!=null) {
+            outState.putString(lastSinglePaneFragment, STEP_DETAIL_FRAGMENT);
+            outState.putParcelable(CURRENT_STEP, currentStep);
+        }
+    }
+
+    @Override
     public void onListFragmentInteraction(Step item) {
         currentStep = item;
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -87,21 +93,6 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
 
         fragmentManager.beginTransaction().replace(
                 mDualPane ? R.id.steps_details_container : R.id.steps_container, stepFragment).commit();
-    }
-
-    @Override
-    public void onBackPressed(){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if (fragmentManager.getBackStackEntryCount() > 0) {
-            StepFragment stepFragment = new StepFragment();
-            Bundle stepsFragBundle = new Bundle();
-            stepsFragBundle.putParcelableArrayList(RECIPES_STEPS, (ArrayList<Step>) mRecipe.getSteps());
-            stepFragment.setArguments(stepsFragBundle);
-            fragmentManager.beginTransaction().replace(
-                    mDualPane ? R.id.steps_list_container : R.id.steps_container, stepFragment).commit();
-        } else {
-            super.onBackPressed();
-        }
     }
 
     private StepFragment getDetatchedMasterFragment(boolean popBackStack) {
