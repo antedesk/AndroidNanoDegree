@@ -10,16 +10,17 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import it.antedesk.bakingapp.fragment.StepDetailsFragment;
 import it.antedesk.bakingapp.fragment.StepFragment;
 import it.antedesk.bakingapp.model.Recipe;
 import it.antedesk.bakingapp.model.Step;
 
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.RECIPES_STEPS;
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.SELECTED_RECIPE;
-import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.SELECTED_STEPS;
+import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.SELECTED_STEP;
 
 public class RecipeDetailsActivity extends AppCompatActivity implements StepFragment.OnListFragmentInteractionListener {
-
+    Recipe mRecipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +32,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
             closeOnError();
         }
         // retriving the movie form intent
-        final Recipe mRecipe = intent.getParcelableExtra(SELECTED_RECIPE);
+        mRecipe = intent.getParcelableExtra(SELECTED_RECIPE);
         if (mRecipe == null) {
             closeOnError();
         }
@@ -52,7 +53,23 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
 
     @Override
     public void onListFragmentInteraction(Step item) {
-        Log.d("tag", item.toString());
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        StepDetailsFragment stepFragment = StepDetailsFragment.newInstance(item);
+        fragmentManager.beginTransaction().replace(R.id.steps_container, stepFragment).commit();
+    }
+
+    @Override
+    public void onBackPressed(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            StepFragment stepFragment = new StepFragment();
+            Bundle stepsFragBundle = new Bundle();
+            stepsFragBundle.putParcelableArrayList(RECIPES_STEPS, (ArrayList<Step>) mRecipe.getSteps());
+            stepFragment.setArguments(stepsFragBundle);
+            fragmentManager.beginTransaction().replace(R.id.steps_container, stepFragment).commit();
+        } else {
+            super.onBackPressed();
+        }
     }
 
 }
