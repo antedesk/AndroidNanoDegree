@@ -1,11 +1,11 @@
 package it.antedesk.bakingapp;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -17,10 +17,16 @@ import it.antedesk.bakingapp.model.Step;
 
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.RECIPES_STEPS;
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.SELECTED_RECIPE;
-import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.SELECTED_STEP;
 
 public class RecipeDetailsActivity extends AppCompatActivity implements StepFragment.OnListFragmentInteractionListener {
+    public static final String STEP_MASTER_FRAGMENT = "STEP_MASTER_FRAGMENT";
+    public static final String STEP_DETAIL_FRAGMENT = "STEP_DETAIL_FRAGMENT";
+
     Recipe mRecipe;
+    Step currentStep;
+    String mLastSinglePaneFragment;
+    boolean mDualPane = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,15 +42,37 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
         if (mRecipe == null) {
             closeOnError();
         }
-
+/*
         FragmentManager fragmentManager = getSupportFragmentManager();
         StepFragment stepFragment = new StepFragment();
         Bundle stepsFragBundle = new Bundle();
         stepsFragBundle.putParcelableArrayList(RECIPES_STEPS, (ArrayList<Step>) mRecipe.getSteps());
         stepFragment.setArguments(stepsFragBundle);
         fragmentManager.beginTransaction().add(R.id.steps_container, stepFragment).commit();
+*/
+        mDualPane = findViewById(R.id.steps_details_container)!=null;
 
+        if (savedInstanceState!=null) {
+            mLastSinglePaneFragment = savedInstanceState.getString("lastSinglePaneFragment");
+        }
 
+        FragmentManager fm = getSupportFragmentManager();
+
+        if (!mDualPane && fm.findFragmentById(R.id.steps_list_container)==null) {
+            StepFragment masterFragment = getDetatchedMasterFragment(false);
+            fm.beginTransaction().add(R.id.steps_container, masterFragment, STEP_MASTER_FRAGMENT).commit();
+            if (mLastSinglePaneFragment==STEP_DETAIL_FRAGMENT) {
+                openSinglePaneDetailFragment();
+            }
+        }
+        if (mDualPane && fm.findFragmentById(R.id.steps_list_container)==null) {
+            StepFragment masterFragment = getDetatchedMasterFragment(true);
+            fm.beginTransaction().add(R.id.steps_list_container, masterFragment, STEP_MASTER_FRAGMENT).commit();
+        }
+        if (mDualPane && fm.findFragmentById(R.id.steps_details_container)==null) {
+            StepDetailsFragment detailFragment = getDetatchedDetailFragment();
+            fm.beginTransaction().add(R.id.steps_details_container, detailFragment, STEP_DETAIL_FRAGMENT).commit();
+        }
     }
 
     private void closeOnError() {
@@ -53,9 +81,12 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
 
     @Override
     public void onListFragmentInteraction(Step item) {
+        currentStep = item;
         FragmentManager fragmentManager = getSupportFragmentManager();
         StepDetailsFragment stepFragment = StepDetailsFragment.newInstance(item);
-        fragmentManager.beginTransaction().replace(R.id.steps_container, stepFragment).commit();
+
+        fragmentManager.beginTransaction().replace(
+                mDualPane ? R.id.steps_details_container : R.id.steps_container, stepFragment).commit();
     }
 
     @Override
@@ -66,10 +97,52 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
             Bundle stepsFragBundle = new Bundle();
             stepsFragBundle.putParcelableArrayList(RECIPES_STEPS, (ArrayList<Step>) mRecipe.getSteps());
             stepFragment.setArguments(stepsFragBundle);
-            fragmentManager.beginTransaction().replace(R.id.steps_container, stepFragment).commit();
+            fragmentManager.beginTransaction().replace(
+                    mDualPane ? R.id.steps_list_container : R.id.steps_container, stepFragment).commit();
         } else {
             super.onBackPressed();
         }
+    }
+
+    private StepFragment getDetatchedMasterFragment(boolean popBackStack) {
+        FragmentManager fm = getSupportFragmentManager();
+        StepFragment masterFragment = (StepFragment) getSupportFragmentManager().findFragmentByTag(STEP_MASTER_FRAGMENT);
+        if (masterFragment == null) {
+            masterFragment = new StepFragment();
+            Bundle stepsFragBundle = new Bundle();
+            stepsFragBundle.putParcelableArrayList(RECIPES_STEPS, (ArrayList<Step>) mRecipe.getSteps());
+            masterFragment.setArguments(stepsFragBundle);
+        } else {
+            if (popBackStack) {
+                fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
+            fm.beginTransaction().remove(masterFragment).commit();
+            fm.executePendingTransactions();
+        }
+        return masterFragment;
+    }
+
+    private StepDetailsFragment getDetatchedDetailFragment() {
+        FragmentManager fm = getSupportFragmentManager();
+        StepDetailsFragment detailFragment = (StepDetailsFragment) getSupportFragmentManager().findFragmentByTag(STEP_DETAIL_FRAGMENT);
+        if (detailFragment == null) {
+            currentStep = currentStep==null? mRecipe.getSteps().get(0): currentStep;
+            detailFragment = StepDetailsFragment.newInstance(currentStep);
+        } else {
+            fm.beginTransaction().remove(detailFragment).commit();
+            fm.executePendingTransactions();
+        }
+        return detailFragment;
+    }
+
+    private void openSinglePaneDetailFragment() {
+        FragmentManager fm = getSupportFragmentManager();
+        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        StepDetailsFragment detailFragment = getDetatchedDetailFragment();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.steps_container, detailFragment, STEP_DETAIL_FRAGMENT);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 }
