@@ -66,15 +66,15 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
         }
         if (mDualPane && fm.findFragmentById(R.id.steps_list_container)==null) {
             StepFragment masterFragment = getDetatchedMasterFragment(true);
-            fm.beginTransaction().add(R.id.steps_list_container, masterFragment, STEP_MASTER_FRAGMENT).commit();
+            fm.beginTransaction().replace(R.id.steps_list_container, masterFragment, STEP_MASTER_FRAGMENT).commit();
         }
         if (mDualPane && fm.findFragmentById(R.id.steps_details_container)==null) {
             StepDetailsFragment detailFragment = getDetatchedDetailFragment();
-            fm.beginTransaction().add(R.id.steps_details_container, detailFragment, STEP_DETAIL_FRAGMENT).commit();
+            fm.beginTransaction().replace(R.id.steps_details_container, detailFragment, STEP_DETAIL_FRAGMENT).commit();
         }
 
 
-        Log.d("TAG","onCreate - #frag = "+fm.getBackStackEntryCount());
+        Log.d("TestFrag","onCreate - #frag = "+fm.getBackStackEntryCount());
     }
 
     private void closeOnError() {
@@ -83,15 +83,16 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
 
     @Override
     public void onBackPressed(){
-        Log.d("TAG","onBackPressed");
+        Log.d("TestFrag","onBackPressed");
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Log.d("TAG","onBackPressed - #frag = "+fragmentManager.getBackStackEntryCount());
+        Log.d("TestFrag","onBackPressed - #frag = "+fragmentManager.getBackStackEntryCount());
 
-        if (!mDualPane && fragmentManager.getBackStackEntryCount() > 1) {
+        Log.d("TestFrag","onBackPressed - else " + mDualPane);
+        if (!mDualPane && fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
             mLastSinglePaneFragment = STEP_MASTER_FRAGMENT;
         } else {
-            Log.d("TAG","onBackPressed - else");
+            Log.d("TestFrag","onBackPressed - else");
             super.onBackPressed();
         }
     }
@@ -101,7 +102,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
         super.onSaveInstanceState(outState);
         if(!mDualPane && currentStep!=null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            Log.d("TAG","onSaveInstanceState - #frag = "+fragmentManager.getBackStackEntryCount());
+            Log.d("TestFrag","onSaveInstanceState - #frag = "+fragmentManager.getBackStackEntryCount());
             outState.putParcelable(CURRENT_STEP, currentStep);
         }
     }
@@ -112,8 +113,10 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
         FragmentManager fragmentManager = getSupportFragmentManager();
         StepDetailsFragment stepFragment = StepDetailsFragment.newInstance(item);
 
-        fragmentManager.beginTransaction().replace(
-                mDualPane ? R.id.steps_details_container : R.id.steps_container, stepFragment).addToBackStack("detail").commit();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(
+                mDualPane ? R.id.steps_details_container : R.id.steps_container, stepFragment);
+        fragmentTransaction.commit();
+        Log.d("TestFrag","onListFragmentInteraction - #frag = "+fragmentManager.getBackStackEntryCount());
     }
 
     private StepFragment getDetatchedMasterFragment(boolean popBackStack) {
@@ -154,7 +157,6 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
         StepDetailsFragment detailFragment = getDetatchedDetailFragment();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.steps_container, detailFragment, STEP_DETAIL_FRAGMENT);
-        fragmentTransaction.addToBackStack("detail");
         fragmentTransaction.commit();
         mLastSinglePaneFragment = STEP_DETAIL_FRAGMENT;
     }
