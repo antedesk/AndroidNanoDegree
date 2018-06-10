@@ -2,6 +2,7 @@ package it.antedesk.bakingapp.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Antedesk on 14/05/2018.
@@ -12,7 +13,9 @@ public class Step implements Parcelable{
     private long id;
     private String shortDescription;
     private String description;
+    @SerializedName("videoURL")
     private String videoUrl;
+    @SerializedName("thumbnailURL")
     private String thumbnailUrl;
 
     public Step(long id, String shortDescription, String description, String videoUrl, String thumbnailUrl) {
