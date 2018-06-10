@@ -58,7 +58,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
         FragmentManager fm = getSupportFragmentManager();
 
         if (!mDualPane && fm.findFragmentById(R.id.steps_container)==null) {
-            StepFragment masterFragment = getDetatchedMasterFragment(true);
+            StepFragment masterFragment = getDetatchedMasterFragment(false);
             fm.beginTransaction().replace(R.id.steps_container, masterFragment, STEP_MASTER_FRAGMENT).commit();
             if (mLastSinglePaneFragment==STEP_DETAIL_FRAGMENT) {
                 openSinglePaneDetailFragment();
@@ -73,7 +73,6 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
             fm.beginTransaction().replace(R.id.steps_details_container, detailFragment, STEP_DETAIL_FRAGMENT).commit();
         }
 
-
         Log.d("TestFrag","onCreate - #frag = "+fm.getBackStackEntryCount());
     }
 
@@ -87,8 +86,9 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
         FragmentManager fragmentManager = getSupportFragmentManager();
         Log.d("TestFrag","onBackPressed - #frag = "+fragmentManager.getBackStackEntryCount());
 
-        Log.d("TestFrag","onBackPressed - else " + mDualPane);
+        Log.d("TestFrag","onBackPressed - mDualPane is " + mDualPane);
         if (!mDualPane && fragmentManager.getBackStackEntryCount() > 0) {
+            Log.d("TestFrag","onBackPressed - entry name at pos 0 " + fragmentManager.getBackStackEntryAt(0).getName());
             fragmentManager.popBackStack();
             mLastSinglePaneFragment = STEP_MASTER_FRAGMENT;
         } else {
@@ -115,6 +115,8 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(
                 mDualPane ? R.id.steps_details_container : R.id.steps_container, stepFragment);
+        if(!mDualPane)
+            fragmentTransaction.addToBackStack("detail");
         fragmentTransaction.commit();
         Log.d("TestFrag","onListFragmentInteraction - #frag = "+fragmentManager.getBackStackEntryCount());
     }

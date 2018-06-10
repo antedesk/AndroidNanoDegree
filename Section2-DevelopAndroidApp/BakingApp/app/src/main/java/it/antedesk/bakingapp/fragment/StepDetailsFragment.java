@@ -114,6 +114,7 @@ public class StepDetailsFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_step_details, container, false);
         ButterKnife.bind(this, view);
 
+
         startPosition = C.TIME_UNSET;
         if (savedInstanceState != null) {
             trackSelectorParameters = savedInstanceState.getParcelable(KEY_TRACK_SELECTOR_PARAMETERS);
@@ -194,24 +195,6 @@ public class StepDetailsFragment extends Fragment{
         outState.putLong(KEY_POSITION, startPosition);
     }
 
-    private void hideSystemUi() {
-        int visibility = View.SYSTEM_UI_FLAG_LOW_PROFILE
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            visibility = View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        }
-        playerView.setSystemUiVisibility(visibility);
-    }
-
     private void clearStartPosition() {
         startAutoPlay = true;
         startWindow = C.INDEX_UNSET;
@@ -253,7 +236,6 @@ public class StepDetailsFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        hideSystemUi();
         if (Util.SDK_INT <= 23 || player == null) {
             initializePlayer();
         }
