@@ -130,6 +130,7 @@ public class HomeActivity extends AppCompatActivity  implements RecipeViewAdapte
                     ResponseBody responseBody = response.body();
                     if (responseBody != null) {
                         String responseJson = responseBody.string();
+                        Log.d("JSON", responseJson);
                         Type recipesType = new TypeToken<List<Recipe>>() {}.getType();
                         recipes = new Gson().fromJson(responseJson, recipesType);
                         Log.d(HOME_ACTIVITY_LOADING, recipes.get(0).toString());

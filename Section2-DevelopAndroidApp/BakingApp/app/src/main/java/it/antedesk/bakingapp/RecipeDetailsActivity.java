@@ -45,6 +45,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
         }
         // retriving the movie form intent
         mRecipe = intent.getParcelableExtra(SELECTED_RECIPE);
+        Log.d(SELECTED_RECIPE, mRecipe.toString());
         if (mRecipe == null) {
             closeOnError();
         }
