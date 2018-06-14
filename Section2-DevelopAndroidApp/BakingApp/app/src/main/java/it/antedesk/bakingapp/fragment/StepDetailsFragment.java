@@ -89,8 +89,10 @@ public class StepDetailsFragment extends Fragment implements PlaybackPreparer, P
     private DefaultTrackSelector trackSelector;
     private TrackGroupArray lastSeenTrackGroupArray;
     private boolean mExoPlayerFullscreen = false;
-    private FrameLayout mFullScreenButton;
-    private ImageView mFullScreenIcon;
+    @BindView(R.id.exo_fullscreen_button)
+    FrameLayout mFullScreenButton;
+    @BindView(R.id.exo_fullscreen_icon)
+    ImageView mFullScreenIcon;
     private Dialog mFullScreenDialog;
     private Context context;
 
@@ -168,6 +170,10 @@ public class StepDetailsFragment extends Fragment implements PlaybackPreparer, P
             trackSelector = new DefaultTrackSelector(adaptiveTrackSelectionFactory);
             trackSelector.setParameters(trackSelectorParameters);
             lastSeenTrackGroupArray = null;
+
+
+            initFullscreenButton();
+            initFullscreenDialog();
 
             // using a DefaultTrackSelector with an adaptive video selection factory
             player = ExoPlayerFactory.newSimpleInstance(
@@ -309,7 +315,7 @@ public class StepDetailsFragment extends Fragment implements PlaybackPreparer, P
 
     private void initFullscreenDialog() {
 
-        mFullScreenDialog = new Dialog(getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
+        mFullScreenDialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
             public void onBackPressed() {
                 if (mExoPlayerFullscreen)
                     closeFullscreenDialog();
@@ -323,7 +329,7 @@ public class StepDetailsFragment extends Fragment implements PlaybackPreparer, P
 
         ((ViewGroup) playerView.getParent()).removeView(playerView);
         mFullScreenDialog.addContentView(playerView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_fullscreen_skrink));
+        mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_fullscreen_skrink));
         mExoPlayerFullscreen = true;
         mFullScreenDialog.show();
     }
@@ -340,10 +346,6 @@ public class StepDetailsFragment extends Fragment implements PlaybackPreparer, P
 
 
     private void initFullscreenButton() {
-
-        PlayerControlView controlView = playerView.findViewById(R.id.exo_controller);
-        mFullScreenIcon = controlView.findViewById(R.id.exo_fullscreen_icon);
-        mFullScreenButton = controlView.findViewById(R.id.exo_fullscreen_button);
         mFullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
