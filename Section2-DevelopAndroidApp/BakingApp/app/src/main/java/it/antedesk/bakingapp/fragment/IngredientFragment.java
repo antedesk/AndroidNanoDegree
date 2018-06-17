@@ -11,13 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import it.antedesk.bakingapp.R;
-import it.antedesk.bakingapp.adapter.StepViewAdapter;
-import it.antedesk.bakingapp.model.Step;
-
 import java.util.List;
 
-import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.RECIPES_STEPS;
+import it.antedesk.bakingapp.R;
+import it.antedesk.bakingapp.adapter.IngredientViewAdapter;
+import it.antedesk.bakingapp.model.Ingredient;
+
+import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.RECIPES_INGREDIENT;
 
 /**
  * A fragment representing a list of Items.
@@ -25,23 +25,24 @@ import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.RECIPES_STE
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class StepFragment extends Fragment {
+public class IngredientFragment extends Fragment {
 
-    private List<Step> steps;
-    private int mStepListIndex;
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+
+    private List<Ingredient> ingredients;
+    private int mIngredientListIndex;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public StepFragment() {
+    public IngredientFragment() {
     }
 
-    public static StepFragment newInstance(int columnCount) {
-        StepFragment fragment = new StepFragment();
+    public static IngredientFragment newInstance(int columnCount) {
+        IngredientFragment fragment = new IngredientFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -54,28 +55,27 @@ public class StepFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            steps =  getArguments().getParcelableArrayList(RECIPES_STEPS);
-            Log.d("RECIPES_STEPS", steps.get(0).toString());
+            ingredients =  getArguments().getParcelableArrayList(RECIPES_INGREDIENT);
+            Log.d(RECIPES_INGREDIENT, ingredients.get(0).toString());
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_step_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_ingredient_list, container, false);
 
         // Set the adapter
-        if (view.findViewById(R.id.list) instanceof RecyclerView) {
+        if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+            RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new StepViewAdapter(steps, mListener));
+            recyclerView.setAdapter(new IngredientViewAdapter(ingredients, mListener));
         }
-
         return view;
     }
 
@@ -108,7 +108,6 @@ public class StepFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Step item);
+        void onListFragmentInteraction(Ingredient ingredient);
     }
-
 }

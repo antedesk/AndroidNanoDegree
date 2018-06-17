@@ -91,7 +91,7 @@ public class Step implements Parcelable{
         return "Step{" +
                 "id=" + id +
                 ", shortDescription='" + shortDescription + '\'' +
-                ", description='" + description + '\'' +
+                ", ingredientName='" + description + '\'' +
                 ", videoUrl='" + videoUrl + '\'' +
                 ", thumbnailUrl='" + thumbnailUrl + '\'' +
                 '}';

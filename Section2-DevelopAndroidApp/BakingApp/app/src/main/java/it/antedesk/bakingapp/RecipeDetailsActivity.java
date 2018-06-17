@@ -5,22 +5,29 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import it.antedesk.bakingapp.fragment.IngredientFragment;
 import it.antedesk.bakingapp.fragment.StepDetailsFragment;
 import it.antedesk.bakingapp.fragment.StepFragment;
+import it.antedesk.bakingapp.fragment.dummy.DummyContent;
+import it.antedesk.bakingapp.model.Ingredient;
 import it.antedesk.bakingapp.model.Recipe;
 import it.antedesk.bakingapp.model.Step;
 
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.CURRENT_STEP;
+import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.RECIPES_INGREDIENT;
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.RECIPES_STEPS;
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.SELECTED_RECIPE;
 
-public class RecipeDetailsActivity extends BaseActivity implements StepFragment.OnListFragmentInteractionListener {
+public class RecipeDetailsActivity extends BaseActivity implements StepFragment.OnListFragmentInteractionListener,
+        IngredientFragment.OnListFragmentInteractionListener {
     public static final String STEP_MASTER_FRAGMENT = "STEP_MASTER_FRAGMENT";
     public static final String STEP_DETAIL_FRAGMENT = "STEP_DETAIL_FRAGMENT";
+    public static final String INGREDIENT_FRAGMENT = "INGREDIENT_FRAGMENT";
 
     Recipe mRecipe;
     Step currentStep;
@@ -59,7 +66,7 @@ public class RecipeDetailsActivity extends BaseActivity implements StepFragment.
         if (!mDualPane && fm.findFragmentById(R.id.steps_container)==null) {
             StepFragment masterFragment = getDetatchedMasterFragment(false);
             fm.beginTransaction().replace(R.id.steps_container, masterFragment, STEP_MASTER_FRAGMENT).commit();
-            if (mLastSinglePaneFragment==STEP_DETAIL_FRAGMENT) {
+            if (mLastSinglePaneFragment==STEP_DETAIL_FRAGMENT || mLastSinglePaneFragment == INGREDIENT_FRAGMENT) {
                 openSinglePaneDetailFragment();
             }
         }
@@ -152,6 +159,22 @@ public class RecipeDetailsActivity extends BaseActivity implements StepFragment.
         return detailFragment;
     }
 
+    private IngredientFragment getDetatchedIngredientFragment() {
+        FragmentManager fm = getSupportFragmentManager();
+        IngredientFragment ingredientFragment = (IngredientFragment) getSupportFragmentManager().findFragmentByTag(INGREDIENT_FRAGMENT);
+        if (ingredientFragment == null) {
+            ingredientFragment = IngredientFragment.newInstance(1);
+            Bundle ingredientsFragBundle = new Bundle();
+            ingredientsFragBundle.putParcelableArrayList(RECIPES_INGREDIENT, (ArrayList<Ingredient>) mRecipe.getIngredients());
+            ingredientFragment.setArguments(ingredientsFragBundle);
+        }
+        else {
+            fm.beginTransaction().remove(ingredientFragment).commit();
+            fm.executePendingTransactions();
+        }
+        return ingredientFragment;
+    }
+
     private void openSinglePaneDetailFragment() {
         FragmentManager fm = getSupportFragmentManager();
         fm.popBackStack("detail", FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -162,4 +185,18 @@ public class RecipeDetailsActivity extends BaseActivity implements StepFragment.
         mLastSinglePaneFragment = STEP_DETAIL_FRAGMENT;
     }
 
+    public void showIngredients(View view) {
+        FragmentManager fm = getSupportFragmentManager();
+        fm.popBackStack("ingredient", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        IngredientFragment ingredientFragment = getDetatchedIngredientFragment();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        int container = mDualPane ? R.id.steps_details_container : R.id.steps_container;
+        fragmentTransaction.replace(container, ingredientFragment, INGREDIENT_FRAGMENT);
+        if(!mDualPane) fragmentTransaction.addToBackStack("ingredient");
+        fragmentTransaction.commit();
+        mLastSinglePaneFragment = INGREDIENT_FRAGMENT;
+    }
+
+    @Override
+    public void onListFragmentInteraction(Ingredient ingredient) { /*DO NOTHING*/}
 }

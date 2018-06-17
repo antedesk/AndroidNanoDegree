@@ -17,5 +17,6 @@ public final class SupportVariablesDefinition {
     public static final String CURRENT_STEP = "SELECTED_STEP";
     public static final String EXOPLAYER = "EXOPLAYER";
     public static final String CURRENT_POSITION = "CURRENT_POSITION";
+    public static final String RECIPES_INGREDIENT = "RECIPES_INGREDIENT";
 
 }

@@ -15,14 +15,14 @@ import it.antedesk.bakingapp.model.Step;
 
 import java.util.List;
 
-public class MyStepRecyclerViewAdapter extends RecyclerView.Adapter<MyStepRecyclerViewAdapter.ViewHolder> {
+public class StepViewAdapter extends RecyclerView.Adapter<StepViewAdapter.ViewHolder> {
 
     private final List<Step> steps;
     private Context parentContex;
 
     private final OnListFragmentInteractionListener mListener;
 
-    public MyStepRecyclerViewAdapter(List<Step> items, OnListFragmentInteractionListener listener) {
+    public StepViewAdapter(List<Step> items, OnListFragmentInteractionListener listener) {
         steps = items;
         mListener = listener;
     }
@@ -54,8 +54,6 @@ public class MyStepRecyclerViewAdapter extends RecyclerView.Adapter<MyStepRecycl
     public int getItemCount() {
         return steps.size();
     }
-
-
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
