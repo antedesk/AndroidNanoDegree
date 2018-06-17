@@ -1,13 +1,10 @@
 package it.antedesk.bakingapp;
 
 import android.content.Intent;
-import android.os.PersistableBundle;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -20,9 +17,8 @@ import it.antedesk.bakingapp.model.Step;
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.CURRENT_STEP;
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.RECIPES_STEPS;
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.SELECTED_RECIPE;
-import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.SELECTED_STEP;
 
-public class RecipeDetailsActivity extends AppCompatActivity implements StepFragment.OnListFragmentInteractionListener {
+public class RecipeDetailsActivity extends BaseActivity implements StepFragment.OnListFragmentInteractionListener {
     public static final String STEP_MASTER_FRAGMENT = "STEP_MASTER_FRAGMENT";
     public static final String STEP_DETAIL_FRAGMENT = "STEP_DETAIL_FRAGMENT";
 
@@ -37,6 +33,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
+        initFont();
 
         Intent intent = getIntent();
         // checking if it is null, if so close the activity
@@ -49,6 +46,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepFrag
         if (mRecipe == null) {
             closeOnError();
         }
+        setTitle(mRecipe.getName());
 
         mDualPane = findViewById(R.id.steps_details_container)!=null;
 

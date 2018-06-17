@@ -102,7 +102,6 @@ public class StepDetailsFragment extends Fragment implements PlaybackPreparer, P
     private static final String KEY_AUTO_PLAY = "auto_play";
     private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
 
-
     public StepDetailsFragment() {
     }
 

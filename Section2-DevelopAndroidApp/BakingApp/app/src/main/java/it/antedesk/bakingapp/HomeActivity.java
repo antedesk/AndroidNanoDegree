@@ -31,6 +31,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
@@ -38,7 +40,7 @@ import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.HOME_ACTIVI
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.RECIPES_DATASOURCE_URL;
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.SELECTED_RECIPE;
 
-public class HomeActivity extends AppCompatActivity  implements RecipeViewAdapter.RecipeViewAdapterOnClickHandler{
+public class HomeActivity extends BaseActivity  implements RecipeViewAdapter.RecipeViewAdapterOnClickHandler{
 
     private ProgressDialog mProgressDialog;
     private List<Recipe> recipes;
@@ -55,9 +57,13 @@ public class HomeActivity extends AppCompatActivity  implements RecipeViewAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+        initFont();
+        boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
+        int portraitColumns = tabletSize ? 2 : 1;
+        int landscapeColumns = tabletSize ? 3 : calculateNoOfColumns(this);
 
         int numberOfColumns =
-                getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT ? 1 : 3;
+                getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT ? portraitColumns : landscapeColumns;
 
         // creating a GridLayoutManager
         GridLayoutManager mLayoutManager
@@ -178,4 +184,5 @@ public class HomeActivity extends AppCompatActivity  implements RecipeViewAdapte
         intent.putExtra(SELECTED_RECIPE, selectedRecipe);
         startActivity(intent);
     }
+
 }

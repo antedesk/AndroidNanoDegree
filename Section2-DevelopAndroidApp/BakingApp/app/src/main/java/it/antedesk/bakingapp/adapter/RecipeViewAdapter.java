@@ -44,7 +44,7 @@ public class RecipeViewAdapter extends RecyclerView.Adapter<RecipeViewAdapter.Re
     public void onBindViewHolder(RecipeAdapterViewHolder holder, int position) {
         Recipe recipe = recipeList.get(position);
         Log.d("MIOTAG", recipe.toString());
-        if(recipe.getImage()!=null && !recipe.getImage().isEmpty() && recipe.getImage()!="")
+        if(recipe.getImage()!=null && !recipe.getImage().isEmpty() && recipe.getImage().equals(""))
             Picasso.with(parentContex)
                 .load(recipe.getImage())
                 .placeholder(R.drawable.bakery_default_img)
