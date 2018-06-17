@@ -1,4 +1,4 @@
-package it.antedesk.bakingapp.fragment;
+package it.antedesk.bakingapp.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

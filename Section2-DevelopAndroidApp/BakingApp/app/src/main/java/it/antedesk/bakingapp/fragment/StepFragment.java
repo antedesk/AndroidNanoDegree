@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import it.antedesk.bakingapp.R;
+import it.antedesk.bakingapp.adapter.MyStepRecyclerViewAdapter;
 import it.antedesk.bakingapp.model.Step;
 
 import java.util.List;
@@ -41,8 +42,6 @@ public class StepFragment extends Fragment {
     public StepFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static StepFragment newInstance(int columnCount) {
         StepFragment fragment = new StepFragment();
         Bundle args = new Bundle();

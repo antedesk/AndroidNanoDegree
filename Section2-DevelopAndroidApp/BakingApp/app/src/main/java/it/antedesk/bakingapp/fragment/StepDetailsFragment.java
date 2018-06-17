@@ -49,6 +49,7 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.ErrorMessageProvider;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,6 +71,8 @@ public class StepDetailsFragment extends Fragment implements PlaybackPreparer, P
     PlayerView playerView;
     @BindView(R.id.main_media_frame)
     FrameLayout exoPlayerFLContainer;
+    @BindView(R.id.step_image)
+    ImageView imageMedia;
     // step to display
     private Step step;
 
@@ -140,6 +143,12 @@ public class StepDetailsFragment extends Fragment implements PlaybackPreparer, P
         if(step.getThumbnailUrl()!=null && !step.getThumbnailUrl().equals(""))
             hasThumbnail = true;
 
+        if(!hasThumbnail && !hasVideo){
+            playerView.setVisibility(View.INVISIBLE);
+            imageMedia.setVisibility(View.VISIBLE);
+        }
+
+
         playerView.setControllerVisibilityListener(this);
         playerView.setErrorMessageProvider(new PlayerErrorMessageProvider());
         playerView.requestFocus();
@@ -186,8 +195,13 @@ public class StepDetailsFragment extends Fragment implements PlaybackPreparer, P
         if (haveStartPosition) {
             player.seekTo(startWindow, startPosition);
         }
+        String uriString = "";
+        if(hasVideo)
+            uriString = step.getVideoUrl();
+        else
+            uriString = step.getThumbnailUrl();
 
-        Uri uri = Uri.parse(step.getVideoUrl());
+        Uri uri = Uri.parse(uriString);
         MediaSource mediaSource = buildMediaSource(uri, null);
         player.prepare(mediaSource,  !haveStartPosition, false);
 
@@ -270,7 +284,7 @@ public class StepDetailsFragment extends Fragment implements PlaybackPreparer, P
     public void onStart() {
         super.onStart();
         if (Util.SDK_INT > 23) {
-            if(hasVideo)
+            if(hasVideo || hasThumbnail)
                 initializePlayer();
         }
     }
@@ -279,7 +293,7 @@ public class StepDetailsFragment extends Fragment implements PlaybackPreparer, P
     public void onResume() {
         super.onResume();
         if (Util.SDK_INT <= 23 || player == null) {
-            if(hasVideo) {
+            if(hasVideo || hasThumbnail) {
                 initializePlayer();
             }
         }
@@ -289,7 +303,7 @@ public class StepDetailsFragment extends Fragment implements PlaybackPreparer, P
     public void onPause() {
         super.onPause();
         if (Util.SDK_INT <= 23) {
-            if(hasVideo)
+            if(hasVideo || hasThumbnail)
                 releasePlayer();
         }
     }
@@ -298,7 +312,7 @@ public class StepDetailsFragment extends Fragment implements PlaybackPreparer, P
     public void onStop() {
         super.onStop();
         if (Util.SDK_INT > 23) {
-            if(hasVideo)
+            if(hasVideo || hasThumbnail)
                 releasePlayer();
         }
     }

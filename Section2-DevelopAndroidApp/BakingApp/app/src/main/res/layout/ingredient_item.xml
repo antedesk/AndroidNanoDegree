@@ -3,7 +3,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="@dimen/layout_margin_10dp"
     android:background="@drawable/item_background">
-
-
+    <TextView
+        android:id="@+id/ingredient_descp"
+        style="@style/BaseTextView"
+        android:layout_margin="@dimen/layout_margin_10dp"
+        android:textColor="@color/tenne"/>
+    <TextView
+        android:id="@+id/ingredient_quantity"
+        style="@style/BaseTextView"
+        android:layout_margin="@dimen/layout_margin_10dp"
+        android:layout_below="@+id/ingredient_descp"/>
+    <TextView
+        android:id="@+id/ingredient_measure"
+        style="@style/BaseTextView"
+        android:layout_margin="@dimen/layout_margin_10dp"
+        android:layout_below="@+id/ingredient_descp"
+        android:layout_toRightOf="@+id/ingredient_quantity"
+        android:layout_toEndOf="@+id/ingredient_quantity" />
 </RelativeLayout>
