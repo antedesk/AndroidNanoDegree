@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -45,8 +46,9 @@ import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.SELECTED_RE
 public class HomeActivity extends BaseActivity implements RecipeViewAdapterOnClickHandler, DelayerCallback {
 
     private ProgressDialog mProgressDialog;
-    private List<Recipe> recipes;
+    private List<Recipe> recipes =null;
     private OkHttpClient client = new OkHttpClient();
+    private static final int DELAY_MILLIS = 3000;
 
     @BindView(R.id.recipes_rv) RecyclerView mRecipesRecyclerView;
     private RecipeViewAdapter mRecipesViewAdapter;
@@ -127,7 +129,12 @@ public class HomeActivity extends BaseActivity implements RecipeViewAdapterOnCli
      * Retrives the recipes from the json file by using okhttp lib with async call
      * @throws Exception
      */
-    public void getRecipes() throws Exception {
+    public void getRecipes(final DelayerCallback callback,
+                           @Nullable final SimpleIdlingResource idlingResource) throws Exception {
+        if (idlingResource != null) {
+            idlingResource.setIdleState(false);
+        }
+
         Request request = new Request.Builder()
                 .url(RECIPES_DATASOURCE_URL)
                 .build();
@@ -147,26 +154,38 @@ public class HomeActivity extends BaseActivity implements RecipeViewAdapterOnCli
                         Type recipesType = new TypeToken<List<Recipe>>() {}.getType();
                         recipes = new Gson().fromJson(responseJson, recipesType);
                         Log.d(HOME_ACTIVITY_LOADING, recipes.get(0).toString());
-                        HomeActivity.this.runOnUiThread(new Runnable() {
+                       /* HomeActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 showRecipes(recipes);
                             }
                         });
-
+                        */
                     }
-                    hideProgressDialog();
+                    //hideProgressDialog();
                 } catch (IOException e){
                     throw new IOException("Unexpected code " + response);
                 }
             }
         });
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (callback != null && recipes!=null) {
+                    callback.onDone(recipes);
+                    if (idlingResource != null) {
+                        idlingResource.setIdleState(true);
+                    }
+                }
+            }
+        }, DELAY_MILLIS);
     }
 
     private void loadRecipesData() {
         try {
             showProgressDialog();
-            getRecipes();
+            getRecipes(HomeActivity.this, mIdlingResource);
         } catch (Exception e) {
             showErrorMessage();
         }
@@ -203,5 +222,9 @@ public class HomeActivity extends BaseActivity implements RecipeViewAdapterOnCli
 
     @Override
     public void onDone(List<Recipe> recipes) {
+        showRecipes(recipes);
+
+        hideProgressDialog();
+
     }
 }
