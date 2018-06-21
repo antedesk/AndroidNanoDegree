@@ -3,16 +3,19 @@ package it.antedesk.bakingapp;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
+import it.antedesk.bakingapp.IdlingResource.SimpleIdlingResource;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -23,6 +26,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.antedesk.bakingapp.adapter.RecipeViewAdapter;
+import it.antedesk.bakingapp.adapter.RecipeViewAdapter.RecipeViewAdapterOnClickHandler;
+import it.antedesk.bakingapp.contracts.DelayerCallback;
 import it.antedesk.bakingapp.model.Recipe;
 import it.antedesk.bakingapp.utils.NetworkUtils;
 import okhttp3.Call;
@@ -31,16 +36,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
 
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.HOME_ACTIVITY_LOADING;
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.RECIPES_DATASOURCE_URL;
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.SELECTED_RECIPE;
 
-public class HomeActivity extends BaseActivity  implements RecipeViewAdapter.RecipeViewAdapterOnClickHandler{
+public class HomeActivity extends BaseActivity implements RecipeViewAdapterOnClickHandler, DelayerCallback {
 
     private ProgressDialog mProgressDialog;
     private List<Recipe> recipes;
@@ -52,12 +54,19 @@ public class HomeActivity extends BaseActivity  implements RecipeViewAdapter.Rec
     private static final String LIST_STATE = "listState";
     private Parcelable mListState = null;
 
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+
         initFont();
+
+        getIdlingResource();
+
         boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
         int portraitColumns = tabletSize ? 2 : 1;
         int landscapeColumns = tabletSize ? 3 : calculateNoOfColumns(this);
@@ -78,11 +87,9 @@ public class HomeActivity extends BaseActivity  implements RecipeViewAdapter.Rec
                 && savedInstanceState.containsKey(LIST_STATE)) {
             mListState = savedInstanceState.getParcelable(LIST_STATE);
         }
-        if(NetworkUtils.isOnline(this)){
-            loadRecipesData();
-        } else{
+        if(!NetworkUtils.isOnline(this))
             showErrorMessage();
-        }
+        loadRecipesData();
     }
 
     /**
@@ -185,4 +192,16 @@ public class HomeActivity extends BaseActivity  implements RecipeViewAdapter.Rec
         startActivity(intent);
     }
 
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
+    }
+
+    @Override
+    public void onDone(List<Recipe> recipes) {
+    }
 }
