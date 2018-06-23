@@ -223,8 +223,6 @@ public class HomeActivity extends BaseActivity implements RecipeViewAdapterOnCli
     @Override
     public void onDone(List<Recipe> recipes) {
         showRecipes(recipes);
-
         hideProgressDialog();
-
     }
 }
