@@ -1,12 +1,10 @@
 package it.antedesk.bakingapp;
 
-import android.support.test.espresso.Espresso;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
@@ -16,7 +14,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
@@ -35,7 +32,7 @@ import static org.hamcrest.Matchers.anything;
 
 @RunWith(AndroidJUnit4.class)
 public class HomeActivityBasicTest {
-    public static final String  STEP_TITLE= "Show Ingredients";
+    public static final String INGREDIENTS_TITLE = "Show Ingredients";
     public static final String RECIPE_NUTELLA_PIE = "Nutella Pie";
     public static final String RECIPE_BROWNIES = "Brownies";
     public static final String RECIPE_YELLOW_CAKE = "Yellow Cake";
@@ -53,9 +50,8 @@ public class HomeActivityBasicTest {
 
     @Test
     public void clickOnRecipeCardNutellaPie_OpensRecipeDetailActivity(){
-        onView(withId(R.id.recipes_rv))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
-        onView(withId(R.id.step_title)).check(matches(withText(STEP_TITLE)));
+        onView(withId(R.id.recipes_rv)).perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+        onView(withId(R.id.show_ingredients)).check(matches(withText(INGREDIENTS_TITLE)));
     }
 
     @Test
@@ -64,7 +60,7 @@ public class HomeActivityBasicTest {
                 .perform(RecyclerViewActions.actionOnItemAtPosition(3, scrollTo()));
         onView(withText(RECIPE_YELLOW_CAKE)).perform(click());
 
-        onView(withId(R.id.step_title)).check(matches(withText(STEP_TITLE)));
+        onView(withId(R.id.show_ingredients)).check(matches(withText(INGREDIENTS_TITLE)));
         onView(allOf(isAssignableFrom(TextView.class), withParent(isAssignableFrom(Toolbar.class)))).check(matches(withText(RECIPE_YELLOW_CAKE)));
     }
 
@@ -76,27 +72,24 @@ public class HomeActivityBasicTest {
 
         onView(allOf(isAssignableFrom(TextView.class), withParent(isAssignableFrom(Toolbar.class)))).check(matches(withText(RECIPE_BROWNIES)));
 
-        onView(withId(R.id.step_title)).check(matches(withText(R.string.show_ingredients)));
-        onView(withId(R.id.step_title)).perform(click());
+        onView(withId(R.id.show_ingredients)).check(matches(withText(R.string.show_ingredients)));
+        onView(withId(R.id.show_ingredients)).perform(click());
 
-        onView(withId(R.id.list))
-                .perform(RecyclerViewActions.scrollToPosition(8));
+        onView(withId(R.id.ingredient_list)).perform(RecyclerViewActions.scrollToPosition(8));
         onView(withText("salt")).check(matches(isDisplayed()));
     }
 
 
     @Test
     public void recipeStepsDetails_OpensDetails(){
-        onView(withId(R.id.recipes_rv))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(2, scrollTo()));
+        onView(withId(R.id.recipes_rv)).perform(RecyclerViewActions.actionOnItemAtPosition(2, scrollTo()));
         onView(withText(RECIPE_NUTELLA_PIE)).perform(click());
 
         onView(allOf(isAssignableFrom(TextView.class), withParent(isAssignableFrom(Toolbar.class)))).check(matches(withText(RECIPE_NUTELLA_PIE)));
 
-        onView(withId(R.id.step_title)).check(matches(withText(R.string.show_ingredients)));
+        onView(withId(R.id.show_ingredients)).check(matches(withText(R.string.show_ingredients)));
 
-        onView(withId(R.id.list))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(4, click()));
+        onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition(4, click()));
 
         onView(withId(R.id.player_view)).check(matches(isDisplayed()));
         onView(withId(R.id.step_title)).check(matches(isDisplayed()));
