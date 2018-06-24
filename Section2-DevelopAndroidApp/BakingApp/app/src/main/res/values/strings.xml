@@ -25,4 +25,5 @@
     <string name="add_to_widget">Add to widget</string>
     <string name="text_recipe_ingredients_added">Recipe\'s ingredients are added to the widget</string>
     <string name="text_recipe_ingredients_not_added">Ops! Something went wrong adding the recipe\'s ingredients</string>
+    <string name="error_image_content_description">no content</string>
 </resources>

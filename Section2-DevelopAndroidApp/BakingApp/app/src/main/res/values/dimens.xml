@@ -20,6 +20,9 @@
     <dimen name="margin_20dp">20dp</dimen>
     <dimen name="radius">5dp</dimen>
     <dimen name="margin_5dp">5dp</dimen>
+    <dimen name="widget_tv_size">20sp</dimen>
+    <dimen name="error_background_radius">22dp</dimen>
+    <dimen name="connection_error_iv">150dp</dimen>
 
     <!--
 Refer to App Widget Documentation for margin information

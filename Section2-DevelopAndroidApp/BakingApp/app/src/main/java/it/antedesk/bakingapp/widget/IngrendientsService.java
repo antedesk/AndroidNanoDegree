@@ -16,7 +16,7 @@ import it.antedesk.bakingapp.RecipeDetailsActivity;
 
 public class IngrendientsService extends IntentService {
 
-    public static final String ACTION_CHANGE_RECIPE_INGREDIENTS_LIST = "it.antedesk.bakingapp.widget.action.update_recipe_ingredients";
+    public static final String ACTION_UPDATE_RECIPE_INGREDIENTS_LIST = "it.antedesk.bakingapp.widget.action.update_recipe_ingredients";
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -29,10 +29,13 @@ public class IngrendientsService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            if (ACTION_CHANGE_RECIPE_INGREDIENTS_LIST.equals(action)) {
+            if (ACTION_UPDATE_RECIPE_INGREDIENTS_LIST.equals(action)) {
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
                 int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, IngredientsWidgetProvider.class));
+
+                //Trigger data update to handle the ListView widgets and force a data refresh
                 appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.ingredient_lv_widget);
+
                 IngredientsWidgetProvider.updateIngredientsWidgets(this, appWidgetManager, RecipeDetailsActivity.recipeName, appWidgetIds);
             }
         }
@@ -40,7 +43,7 @@ public class IngrendientsService extends IntentService {
 
     public static boolean startActionUpdateRecipeIngredientsList(Context context) {
         Intent intent = new Intent(context, IngrendientsService.class);
-        intent.setAction(ACTION_CHANGE_RECIPE_INGREDIENTS_LIST);
+        intent.setAction(ACTION_UPDATE_RECIPE_INGREDIENTS_LIST);
         try {
             context.startService(intent);
             return true;

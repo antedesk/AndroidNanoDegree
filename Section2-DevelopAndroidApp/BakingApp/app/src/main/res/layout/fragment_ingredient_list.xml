@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
+    android:background="@color/light_gray"
     app:layoutManager="LinearLayoutManager"
     tools:context="it.antedesk.bakingapp.fragment.IngredientFragment"
     tools:listitem="@layout/fragment_ingredient_item" />

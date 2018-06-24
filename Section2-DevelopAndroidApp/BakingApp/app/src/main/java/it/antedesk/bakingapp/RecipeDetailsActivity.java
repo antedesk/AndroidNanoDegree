@@ -2,7 +2,6 @@ package it.antedesk.bakingapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -34,7 +33,7 @@ public class RecipeDetailsActivity extends BaseActivity implements StepFragment.
     public static final String STEP_DETAIL_FRAGMENT = "STEP_DETAIL_FRAGMENT";
     public static final String INGREDIENT_FRAGMENT = "INGREDIENT_FRAGMENT";
 
-    public static Recipe mRecipe;
+    Recipe mRecipe;
     Step currentStep;
     String mLastSinglePaneFragment;
     public static String recipeName = "";

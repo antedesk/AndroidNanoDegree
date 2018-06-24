@@ -53,6 +53,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
 
     @Override
     public RemoteViews getViewAt(int position) {
+        if(ingredients == null) return null;
         RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.recipe_ingredient_item_widget);
         remoteViews.setTextViewText(R.id.widget_list_view_text_ingredient, ingredients.get(position).getIngredient());
         remoteViews.setTextViewText(R.id.widget_list_view_text_measure, ingredients.get(position).getMeasure());
@@ -67,17 +68,17 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
 
     @Override
     public int getViewTypeCount() {
-        return ingredients == null ? 0 : ingredients.size();
+        return 1;
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 
 }

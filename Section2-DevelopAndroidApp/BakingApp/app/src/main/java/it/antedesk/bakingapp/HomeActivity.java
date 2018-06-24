@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import it.antedesk.bakingapp.IdlingResource.SimpleIdlingResource;
 import com.google.gson.Gson;
@@ -57,6 +58,9 @@ public class HomeActivity extends BaseActivity implements RecipeViewAdapterOnCli
 
     @Nullable
     private SimpleIdlingResource mIdlingResource;
+
+    @BindView(R.id.connection_error_layout)
+    LinearLayout mConnectionErrorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -180,9 +184,8 @@ public class HomeActivity extends BaseActivity implements RecipeViewAdapterOnCli
             mRecipesRecyclerView.getLayoutManager().onRestoreInstanceState(mListState);
     }
 
-    //TODO Add error layout when network is not working
     public void showErrorMessage(){
-     //   mConnectionErrorLayout.setVisibility(View.VISIBLE);
+        mConnectionErrorLayout.setVisibility(View.VISIBLE);
         mRecipesRecyclerView.setVisibility(View.INVISIBLE);
     }
 
