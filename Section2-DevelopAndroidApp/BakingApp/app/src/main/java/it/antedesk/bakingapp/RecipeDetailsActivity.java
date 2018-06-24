@@ -2,21 +2,26 @@ package it.antedesk.bakingapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import it.antedesk.bakingapp.fragment.IngredientFragment;
 import it.antedesk.bakingapp.fragment.StepDetailsFragment;
 import it.antedesk.bakingapp.fragment.StepFragment;
-import it.antedesk.bakingapp.fragment.dummy.DummyContent;
 import it.antedesk.bakingapp.model.Ingredient;
 import it.antedesk.bakingapp.model.Recipe;
 import it.antedesk.bakingapp.model.Step;
+import it.antedesk.bakingapp.widget.IngrendientsService;
 
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.CURRENT_STEP;
 import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.RECIPES_INGREDIENT;
@@ -29,9 +34,12 @@ public class RecipeDetailsActivity extends BaseActivity implements StepFragment.
     public static final String STEP_DETAIL_FRAGMENT = "STEP_DETAIL_FRAGMENT";
     public static final String INGREDIENT_FRAGMENT = "INGREDIENT_FRAGMENT";
 
-    Recipe mRecipe;
+    public static Recipe mRecipe;
     Step currentStep;
     String mLastSinglePaneFragment;
+    public static String recipeName = "";
+    public static List<Ingredient> ingredients = new ArrayList<Ingredient>();
+
     boolean mDualPane = false;
     final String lastSinglePaneFragment = "lastSinglePaneFragment";
 
@@ -53,7 +61,9 @@ public class RecipeDetailsActivity extends BaseActivity implements StepFragment.
         if (mRecipe == null) {
             closeOnError();
         }
-        setTitle(mRecipe.getName());
+
+        recipeName = mRecipe.getName();
+        setTitle(recipeName);
 
         mDualPane = findViewById(R.id.steps_details_container)!=null;
 
@@ -84,6 +94,27 @@ public class RecipeDetailsActivity extends BaseActivity implements StepFragment.
 
     private void closeOnError() {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.recipe_details_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        boolean isRecipeAdded = false;
+        if (itemId == R.id.action_add) {
+            ingredients = mRecipe.getIngredients();
+            isRecipeAdded = IngrendientsService.startActionUpdateRecipeIngredientsList(this);
+            int textId2Display = isRecipeAdded ? R.string.text_recipe_ingredients_added : R.string.text_recipe_ingredients_not_added;
+            Toast.makeText(this,getString(textId2Display),Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -45,7 +45,6 @@ import static it.antedesk.bakingapp.utils.SupportVariablesDefinition.SELECTED_RE
 
 public class HomeActivity extends BaseActivity implements RecipeViewAdapterOnClickHandler, DelayerCallback {
 
-    private ProgressDialog mProgressDialog;
     private List<Recipe> recipes =null;
     private OkHttpClient client = new OkHttpClient();
     private static final int DELAY_MILLIS = 3000;
@@ -107,22 +106,6 @@ public class HomeActivity extends BaseActivity implements RecipeViewAdapterOnCli
         if(noOfColumns < 2)
             noOfColumns = 2;
         return noOfColumns;
-    }
-
-    public void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.loading));
-            mProgressDialog.setIndeterminate(true);
-        }
-
-        mProgressDialog.show();
-    }
-
-    public void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
     }
 
     /**

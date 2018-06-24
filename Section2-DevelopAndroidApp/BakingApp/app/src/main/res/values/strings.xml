@@ -17,4 +17,12 @@
     <string name="placeholder_default_pic">placeholder_default_pic</string>
     <string name="show_ingredients">Show Ingredients</string>
     <string name="quantity">Quantity: </string>
+    <string name="appwidget_text">Any Recipe Added</string>
+    <string name="add_widget">Add widget</string>
+    <string name="fake_unit">CUP</string>
+    <string name="fake_quantity">2</string>
+    <string name="fake_ingredient">Sugar</string>
+    <string name="add_to_widget">Add to widget</string>
+    <string name="text_recipe_ingredients_added">Recipe\'s ingredients are added to the widget</string>
+    <string name="text_recipe_ingredients_not_added">Ops! Something went wrong adding the recipe\'s ingredients</string>
 </resources>

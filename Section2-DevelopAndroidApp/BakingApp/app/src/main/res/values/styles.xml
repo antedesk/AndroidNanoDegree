@@ -1,24 +1,9 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/heavenly</item>
         <item name="colorPrimaryDark">@color/mango_tango</item>
         <item name="colorAccent">@color/tenne</item>
-        <item name="actionBarStyle">@style/MyActionBar</item>
-    </style>
-    <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <!-- Customize your theme here. -->
-        <item name="background">@color/heavenly</item>
-        <item name="titleTextStyle">@style/MyActionBarTitle</item>
-    </style>
-    <style name="MyActionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/isabelline</item>
-        <!--<item name="fontPath">fonts/attack_of_the_cucumbers.ttf</item>-->
-    </style>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

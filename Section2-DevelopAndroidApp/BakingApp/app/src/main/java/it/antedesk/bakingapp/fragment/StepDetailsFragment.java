@@ -53,6 +53,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import it.antedesk.bakingapp.R;
 import it.antedesk.bakingapp.model.Step;
 
@@ -104,6 +105,7 @@ public class StepDetailsFragment extends Fragment implements PlaybackPreparer, P
     private static final String KEY_POSITION = "position";
     private static final String KEY_AUTO_PLAY = "auto_play";
     private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
+    private Unbinder unbinder;
 
     public StepDetailsFragment() {
     }
@@ -136,7 +138,7 @@ public class StepDetailsFragment extends Fragment implements PlaybackPreparer, P
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_step_details, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         if(step.getVideoUrl()!=null && !step.getVideoUrl().equals(""))
             hasVideo = true;
@@ -324,6 +326,7 @@ public class StepDetailsFragment extends Fragment implements PlaybackPreparer, P
     public void onDestroy() {
         super.onDestroy();
         releasePlayer();
+        unbinder.unbind();
     }
 
     private void initFullscreenDialog() {
